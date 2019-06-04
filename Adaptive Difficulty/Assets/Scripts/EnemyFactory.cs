@@ -5,23 +5,13 @@ using UnityEngine;
 
 public class EnemyFactory
 {
-    public GameObject[] GenerateEnemies()
+    public static void Setup(GameObject shooter, Vector3 pos, float fireRate, int health, float speed, float shotSpeed)
     {
-        GameObject[] enemies = new GameObject[3];
-        return enemies;
-    }
-
-    private GameObject Melee(Vector3 pos)
-    {
-        GameObject melee = GameObject.Instantiate(Resources.Load("Melee")) as GameObject;
-        melee.GetComponent<Transform>().position = pos;
-        return melee;
-    }
-
-    private GameObject Shooter(Vector3 pos)
-    {
-        GameObject shooter = GameObject.Instantiate(Resources.Load("Shooter")) as GameObject;
         shooter.GetComponent<Transform>().position = pos;
-        return shooter;
+        Shooter script = shooter.GetComponent<Shooter>();
+        script.fireRate = fireRate;
+        script.health = health;
+        script.speed = speed;
+        script.shotSpeed = shotSpeed;
     }
 }

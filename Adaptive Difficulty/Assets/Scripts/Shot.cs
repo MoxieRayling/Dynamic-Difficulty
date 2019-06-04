@@ -22,13 +22,13 @@ public class Shot : MonoBehaviour
     {
         if (col.tag == target && target == "Enemy")
         {
-            col.gameObject.GetComponent<Enemy>().Hurt();
+            col.gameObject.GetComponent<Shooter>().Hurt();
         }
     }
 
     IEnumerator Timeout()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(3f);
         Destroy(gameObject);
     }
 }

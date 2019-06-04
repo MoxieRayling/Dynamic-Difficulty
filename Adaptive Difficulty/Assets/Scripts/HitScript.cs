@@ -20,7 +20,7 @@ public class HitScript : MonoBehaviour
 	{
         if (col.tag == target && target == "Enemy")
         {
-            col.gameObject.GetComponent<Enemy>().Hurt();
+            col.gameObject.GetComponent<Shooter>().Hurt();
             Destroy(gameObject);
         }
     }

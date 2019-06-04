@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class Room : MonoBehaviour
 {
-    public GameObject melee;
     public GameObject shooter;
     private GameObject player;
-    private EnemyFactory ef;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,7 +17,8 @@ public class Room : MonoBehaviour
     {
         if(transform.childCount <= 1 && Vector3.Distance(transform.position, player.transform.position) < 50)
         {
-            Instantiate(Enemy(), transform);
+            Instantiate(shooter, transform);
+            EnemyFactory.Setup(shooter, transform.position, 4, 4, 4, 4);
         }
     }
 
@@ -34,14 +33,5 @@ public class Room : MonoBehaviour
             float y = Mathf.Clamp(child.position.y, -yDiff, yDiff);
             child.position = new Vector2(x, y);
         }
-    }
-
-    GameObject Enemy()
-    {
-        if (Random.value >= 0.5)
-        {
-            return melee;
-        }
-        else return shooter;
     }
 }
