@@ -7,15 +7,18 @@ public class Player : MonoBehaviour
 {
     public float speed;
     public GameObject hit;
+    public Room room;
     private Rigidbody2D rb;
     private CircleCollider2D col;
     private Vector3 change;
     private bool dash = false;
+    private GameObject target;
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<CircleCollider2D>();
+        target = room.NearestEnemy();
     }
 
     // Update is called once per frame

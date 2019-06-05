@@ -5,9 +5,8 @@ using UnityEngine;
 
 public class EnemyFactory
 {
-    public static void Setup(GameObject shooter, Vector3 pos, float fireRate, int health, float speed, float shotSpeed)
+    public static void Setup(GameObject shooter, float fireRate, int health, float speed, float shotSpeed)
     {
-        shooter.GetComponent<Transform>().position = pos;
         Shooter script = shooter.GetComponent<Shooter>();
         script.fireRate = fireRate;
         script.health = health;

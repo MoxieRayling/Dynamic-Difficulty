@@ -14,13 +14,13 @@ public class Shooter : MonoBehaviour
     private bool busy;
     public int health;
     public float shotSpeed;
+    public Vector3 spawn;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         target = GameObject.FindWithTag("Player").transform;
-        shot.GetComponent<Shot>().target = "Player";
-        shot.GetComponent<Shot>().vel = shotSpeed;
+        spawn = transform.position;
     }
 
     void Update()
@@ -56,11 +56,14 @@ public class Shooter : MonoBehaviour
         
         //yield return new WaitForSeconds(0f);
         GameObject temp = Instantiate(shot, transform.position + dir.normalized * 0.5f, Quaternion.AngleAxis(angle, Vector3.forward));
-        temp.GetComponent<Shot>().dir = dir+pos;
+        temp.GetComponent<Shot>().dir = dir;
+        temp.GetComponent<Shot>().target = "Player";
+        temp.GetComponent<Shot>().vel = shotSpeed;
 
         yield return new WaitForSeconds(0.35f/fireRate);
         busy = false;
     }
+
     public void Hurt()
     {
         health--;
