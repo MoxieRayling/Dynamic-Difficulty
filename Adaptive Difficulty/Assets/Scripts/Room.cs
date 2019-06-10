@@ -1,34 +1,39 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Room : MonoBehaviour
 {
-    public GameObject shooter1;
-    public GameObject shooter2;
-    public GameObject shooter3;
-    public GameObject shooter4;
-    public GameObject shooter5;
-    public GameObject shooter6;
-    private GameObject player;
-    private List<GameObject> enemies;
+    public Shooter shooter1;
+    public Shooter shooter2;
+    public Shooter shooter3;
+    public Shooter shooter4;
+    public Shooter shooter5;
+    public Shooter shooter6;
+    public Player player;
+    private List<Shooter> enemies;
     // Start is called before the first frame update
     void Start()
     {
-        enemies = new List<GameObject>() { shooter1, shooter2, shooter3, shooter4, shooter5, shooter6 };
-        player = GameObject.FindWithTag("Player");
+        enemies = new List<Shooter>() { shooter1, shooter2, shooter3, shooter4, shooter5, shooter6 };
         EnemyFactory.Setup(shooter1, 1, 4, 4, 4);
         EnemyFactory.Setup(shooter2, 1, 4, 4, 4);
         EnemyFactory.Setup(shooter3, 1, 4, 4, 4);
         EnemyFactory.Setup(shooter4, 1, 4, 4, 4);
         EnemyFactory.Setup(shooter5, 1, 4, 4, 4);
         EnemyFactory.Setup(shooter6, 1, 4, 4, 4);
+        player.SetTarget(NearestEnemy());
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        player.SetTarget(NearestEnemy());
+        if(enemies.FindAll(enemy => enemy.enabled).Capacity == 0)
+        {
+            enemies.ForEach(enemy => enemy.Revive());
+        }
     }
 
     void LateUpdate()
@@ -44,14 +49,27 @@ public class Room : MonoBehaviour
         }
     }
 
-    public GameObject NearestEnemy()
+    private Shooter NearestEnemy()
     {
-        float dist = 100;
-        GameObject result = null;
-        foreach (GameObject e in enemies)
+        var alive = enemies.FindAll(enemy => enemy.enabled);
+        if (alive.Capacity > 0)
         {
-            if (Vector3.Distance(player.transform.position, e.transform.position) < dist) result = e;
+            Vector2 pPos = player.transform.position;
+            alive.Sort((e1, e2) => Vector2.Distance(pPos, e1.transform.position).CompareTo(Vector2.Distance(pPos, e2.transform.position)));
+            return alive[0];
         }
-        return result;
+        return null;
+        /*
+        float dist = 100;
+        Shooter result = null;
+        foreach (Shooter e in enemies.FindAll(enemy => enemy.enabled))
+        {
+            if (Vector3.Distance(player.transform.position, e.transform.position) < dist)
+            {
+                result = e;
+                dist = Vector2.Distance(player.transform.position, e.transform.position);
+            }
+        }
+        return result;*/
     }
 }

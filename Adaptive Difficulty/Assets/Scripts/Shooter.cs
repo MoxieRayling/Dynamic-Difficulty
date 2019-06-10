@@ -8,6 +8,7 @@ public class Shooter : MonoBehaviour
     public Transform target;
     public float speed;
     public float fireRate;
+    public Room room;
     private Rigidbody2D rb;
     private Vector3 change;
     public GameObject shot;
@@ -15,12 +16,17 @@ public class Shooter : MonoBehaviour
     public int health;
     public float shotSpeed;
     public Vector3 spawn;
+    private SpriteRenderer sprite;
+    private Collider2D col;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         target = GameObject.FindWithTag("Player").transform;
         spawn = transform.position;
+        sprite = GetComponent<SpriteRenderer>();
+        col = GetComponent<Collider2D>();
+        StartCoroutine(Startup());
     }
 
     void Update()
@@ -46,6 +52,13 @@ public class Shooter : MonoBehaviour
         }
     }
 
+    IEnumerator Startup()
+    {
+        busy = true;
+        yield return new WaitForSeconds(1);
+        busy = false;
+    }
+
     IEnumerator Shot()
     {
         busy = true;
@@ -69,7 +82,23 @@ public class Shooter : MonoBehaviour
         health--;
         if (health <= 0)
         {
-            Destroy(gameObject);
+            Die();
         }
+    }
+
+    private void Die()
+    {
+        enabled = false;
+        col.enabled = false;
+        sprite.enabled = false;
+    }
+
+    public void Revive()
+    {
+        enabled = true;
+        col.enabled = true;
+        sprite.enabled = true;
+        health = 4;
+        StartCoroutine(Startup());
     }
 }

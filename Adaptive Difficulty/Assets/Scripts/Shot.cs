@@ -7,6 +7,7 @@ public class Shot : MonoBehaviour
     public string target;
     public float vel;
     public Vector3 dir;
+    private static int playerHits = 0;
 
     void Start()
     {
@@ -23,6 +24,12 @@ public class Shot : MonoBehaviour
         if (col.tag == target && target == "Enemy")
         {
             col.gameObject.GetComponent<Shooter>().Hurt();
+            Destroy(gameObject);
+        }
+        if (col.tag == target && target == "Player")
+        {
+            //Debug.Log(playerHits++);
+            Destroy(gameObject);
         }
     }
 
