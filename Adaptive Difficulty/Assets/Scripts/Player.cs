@@ -86,9 +86,11 @@ public class Player : MonoBehaviour
         var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90;
 
         GameObject temp = Instantiate(shot, transform.position + dir.normalized * 0.5f, Quaternion.AngleAxis(angle, Vector3.forward));
-        temp.GetComponent<Shot>().dir = dir;
-        temp.GetComponent<Shot>().target = "Enemy";
-        temp.GetComponent<Shot>().vel = shotSpeed;
+        var script = temp.GetComponent<Shot>();
+        script.dir = dir;
+        script.target = "Enemy";
+        script.vel = shotSpeed;
+        script.SetRoom(room);
         yield return new WaitForSeconds(0.35f / fireRate);
         shooting = false;
     }
@@ -96,5 +98,12 @@ public class Player : MonoBehaviour
     public void SetTarget(Shooter target)
     {
         this.target = target;
+    }
+
+    private double Dist(double x, double weight, double spread, double peak)
+    {
+        return weight / Math.Sqrt(Math.PI * 2) * Math.Exp(-1 / 2 * Math.Pow(spread * (x - peak), 2) / 2) +
+            weight / Math.Sqrt(Math.PI * 2) * Math.Exp(-1 / 2 * Math.Pow(spread * (x - peak + 360), 2) / 2) + 
+            weight / Math.Sqrt(Math.PI * 2) * Math.Exp(-1 / 2 * Math.Pow(spread * (x - peak), 2 - 360) / 2);
     }
 }

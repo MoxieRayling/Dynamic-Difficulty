@@ -63,16 +63,16 @@ public class Shooter : MonoBehaviour
     {
         busy = true;
         yield return new WaitForSeconds(0.15f/fireRate);
-        var pos = transform.position;
-        var dir = target.position - pos;
-        var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90;
-        
-        //yield return new WaitForSeconds(0f);
-        GameObject temp = Instantiate(shot, transform.position + dir.normalized * 0.5f, Quaternion.AngleAxis(angle, Vector3.forward));
-        temp.GetComponent<Shot>().dir = dir;
-        temp.GetComponent<Shot>().target = "Player";
-        temp.GetComponent<Shot>().vel = shotSpeed;
+        var dir = target.position - transform.position;
 
+        GameObject temp = Instantiate(shot, transform.position + dir.normalized * 0.5f, Quaternion.identity);
+        var script = temp.GetComponent<Shot>();
+        script.dir = dir;
+        script.target = "Player";
+        script.vel = shotSpeed;
+        script.SetRoom(room);
+        temp.GetComponent<SpriteRenderer>().color = new Color(255,0,0);
+        temp.tag = "EnemyShot";
         yield return new WaitForSeconds(0.35f/fireRate);
         busy = false;
     }

@@ -14,6 +14,7 @@ public class Room : MonoBehaviour
     public Player player;
     private List<Shooter> enemies;
     private Vector2 size;
+    private GameObject[] shots;
     // Start is called before the first frame update
     void Start()
     {
@@ -31,11 +32,20 @@ public class Room : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        shots = GameObject.FindGameObjectsWithTag("EnemyShot");
+        //Debug.Log("Shots: " + shots.Length);
         player.SetTarget(NearestEnemy());
-        if(enemies.FindAll(enemy => enemy.enabled).Capacity == 0)
+        if (enemies.FindAll(enemy => enemy.enabled).Capacity == 0 && shots.Length == 0)
         {
             enemies.ForEach(enemy => enemy.Revive());
         }
+    }
+
+    public bool IsOutside(Vector2 pos)
+    {
+        if (pos.x > size.x / 2 || pos.x < -size.x / 2 || pos.y > size.y / 2 || pos.y < -size.y / 2)
+            return true;
+        return false;
     }
 
     void LateUpdate()
