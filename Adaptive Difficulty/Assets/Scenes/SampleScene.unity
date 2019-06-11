@@ -230,7 +230,7 @@ PrefabInstance:
     - target: {fileID: 6987969538310127655, guid: e13c6a6fd47414f4bb007767bb54c3a5,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6987969538310127655, guid: e13c6a6fd47414f4bb007767bb54c3a5,
         type: 3}
@@ -531,7 +531,7 @@ PrefabInstance:
     - target: {fileID: 6987969538310127655, guid: e13c6a6fd47414f4bb007767bb54c3a5,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2
+      value: -4
       objectReference: {fileID: 0}
     - target: {fileID: 6987969538310127655, guid: e13c6a6fd47414f4bb007767bb54c3a5,
         type: 3}
@@ -902,6 +902,53 @@ PrefabInstance:
       propertyPath: m_Name
       value: room
       objectReference: {fileID: 0}
+    - target: {fileID: 6463931834182320844, guid: c2b0c025fd70fc44db00e53bc3f28d3a,
+        type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 558222100}
+    - target: {fileID: 6463931834182320844, guid: c2b0c025fd70fc44db00e53bc3f28d3a,
+        type: 3}
+      propertyPath: melee
+      value: 
+      objectReference: {fileID: 7883838821744365335, guid: a30acfab8bc1dc84fb2bdbd2fbecd08e,
+        type: 3}
+    - target: {fileID: 6463931834182320844, guid: c2b0c025fd70fc44db00e53bc3f28d3a,
+        type: 3}
+      propertyPath: shooter
+      value: 
+      objectReference: {fileID: 6987969538310128090, guid: e13c6a6fd47414f4bb007767bb54c3a5,
+        type: 3}
+    - target: {fileID: 6463931834182320844, guid: c2b0c025fd70fc44db00e53bc3f28d3a,
+        type: 3}
+      propertyPath: shooter1
+      value: 
+      objectReference: {fileID: 676269425}
+    - target: {fileID: 6463931834182320844, guid: c2b0c025fd70fc44db00e53bc3f28d3a,
+        type: 3}
+      propertyPath: shooter2
+      value: 
+      objectReference: {fileID: 2035477723}
+    - target: {fileID: 6463931834182320844, guid: c2b0c025fd70fc44db00e53bc3f28d3a,
+        type: 3}
+      propertyPath: shooter3
+      value: 
+      objectReference: {fileID: 1926351901}
+    - target: {fileID: 6463931834182320844, guid: c2b0c025fd70fc44db00e53bc3f28d3a,
+        type: 3}
+      propertyPath: shooter4
+      value: 
+      objectReference: {fileID: 795327237}
+    - target: {fileID: 6463931834182320844, guid: c2b0c025fd70fc44db00e53bc3f28d3a,
+        type: 3}
+      propertyPath: shooter5
+      value: 
+      objectReference: {fileID: 1847488848}
+    - target: {fileID: 6463931834182320844, guid: c2b0c025fd70fc44db00e53bc3f28d3a,
+        type: 3}
+      propertyPath: shooter6
+      value: 
+      objectReference: {fileID: 1794830890}
     - target: {fileID: 6463931834182320846, guid: c2b0c025fd70fc44db00e53bc3f28d3a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -957,53 +1004,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6463931834182320844, guid: c2b0c025fd70fc44db00e53bc3f28d3a,
-        type: 3}
-      propertyPath: player
-      value: 
-      objectReference: {fileID: 558222100}
-    - target: {fileID: 6463931834182320844, guid: c2b0c025fd70fc44db00e53bc3f28d3a,
-        type: 3}
-      propertyPath: melee
-      value: 
-      objectReference: {fileID: 7883838821744365335, guid: a30acfab8bc1dc84fb2bdbd2fbecd08e,
-        type: 3}
-    - target: {fileID: 6463931834182320844, guid: c2b0c025fd70fc44db00e53bc3f28d3a,
-        type: 3}
-      propertyPath: shooter
-      value: 
-      objectReference: {fileID: 6987969538310128090, guid: e13c6a6fd47414f4bb007767bb54c3a5,
-        type: 3}
-    - target: {fileID: 6463931834182320844, guid: c2b0c025fd70fc44db00e53bc3f28d3a,
-        type: 3}
-      propertyPath: shooter1
-      value: 
-      objectReference: {fileID: 676269425}
-    - target: {fileID: 6463931834182320844, guid: c2b0c025fd70fc44db00e53bc3f28d3a,
-        type: 3}
-      propertyPath: shooter2
-      value: 
-      objectReference: {fileID: 2035477723}
-    - target: {fileID: 6463931834182320844, guid: c2b0c025fd70fc44db00e53bc3f28d3a,
-        type: 3}
-      propertyPath: shooter3
-      value: 
-      objectReference: {fileID: 1926351901}
-    - target: {fileID: 6463931834182320844, guid: c2b0c025fd70fc44db00e53bc3f28d3a,
-        type: 3}
-      propertyPath: shooter4
-      value: 
-      objectReference: {fileID: 795327237}
-    - target: {fileID: 6463931834182320844, guid: c2b0c025fd70fc44db00e53bc3f28d3a,
-        type: 3}
-      propertyPath: shooter5
-      value: 
-      objectReference: {fileID: 1847488848}
-    - target: {fileID: 6463931834182320844, guid: c2b0c025fd70fc44db00e53bc3f28d3a,
-        type: 3}
-      propertyPath: shooter6
-      value: 
-      objectReference: {fileID: 1794830890}
     - target: {fileID: 6463931834182320845, guid: c2b0c025fd70fc44db00e53bc3f28d3a,
         type: 3}
       propertyPath: m_Offset.x
@@ -1012,7 +1012,7 @@ PrefabInstance:
     - target: {fileID: 6463931834182320845, guid: c2b0c025fd70fc44db00e53bc3f28d3a,
         type: 3}
       propertyPath: m_Size.x
-      value: 19.911913
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 6463931834182320845, guid: c2b0c025fd70fc44db00e53bc3f28d3a,
         type: 3}
@@ -1022,12 +1022,17 @@ PrefabInstance:
     - target: {fileID: 6463931834182320845, guid: c2b0c025fd70fc44db00e53bc3f28d3a,
         type: 3}
       propertyPath: m_Size.y
-      value: 9.924275
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 6463931834182320845, guid: c2b0c025fd70fc44db00e53bc3f28d3a,
         type: 3}
       propertyPath: m_IsTrigger
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5966226052156986534, guid: c2b0c025fd70fc44db00e53bc3f28d3a,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6463931834182320847, guid: c2b0c025fd70fc44db00e53bc3f28d3a, type: 3}

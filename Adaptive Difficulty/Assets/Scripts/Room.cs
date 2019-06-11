@@ -13,9 +13,11 @@ public class Room : MonoBehaviour
     public Shooter shooter6;
     public Player player;
     private List<Shooter> enemies;
+    private Vector2 size;
     // Start is called before the first frame update
     void Start()
     {
+        size = gameObject.GetComponent<BoxCollider2D>().size;
         enemies = new List<Shooter>() { shooter1, shooter2, shooter3, shooter4, shooter5, shooter6 };
         EnemyFactory.Setup(shooter1, 1, 4, 4, 4);
         EnemyFactory.Setup(shooter2, 1, 4, 4, 4);
@@ -38,7 +40,6 @@ public class Room : MonoBehaviour
 
     void LateUpdate()
     {
-        Vector2 size = gameObject.GetComponent<BoxCollider2D>().size;
         foreach (Transform child in transform)
         {
             float xDiff = size.x / 2 - child.GetComponent<Collider2D>().bounds.size.x / 2;
@@ -59,17 +60,5 @@ public class Room : MonoBehaviour
             return alive[0];
         }
         return null;
-        /*
-        float dist = 100;
-        Shooter result = null;
-        foreach (Shooter e in enemies.FindAll(enemy => enemy.enabled))
-        {
-            if (Vector3.Distance(player.transform.position, e.transform.position) < dist)
-            {
-                result = e;
-                dist = Vector2.Distance(player.transform.position, e.transform.position);
-            }
-        }
-        return result;*/
     }
 }

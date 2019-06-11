@@ -28,7 +28,7 @@ public class Shot : MonoBehaviour
         }
         if (col.tag == target && target == "Player")
         {
-            //Debug.Log(playerHits++);
+            Debug.Log(++playerHits);
             Destroy(gameObject);
         }
     }
