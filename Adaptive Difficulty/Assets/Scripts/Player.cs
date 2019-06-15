@@ -100,5 +100,10 @@ public class Player : MonoBehaviour
         this.target = target;
     }
 
-    
+    private double Dist(double x, double weight, double spread, double peak)
+    {
+        return weight / Math.Sqrt(Math.PI * 2) * Math.Exp(-1 / 2 * Math.Pow(spread * (x - peak), 2) / 2) +
+            weight / Math.Sqrt(Math.PI * 2) * Math.Exp(-1 / 2 * Math.Pow(spread * (x - peak + 360), 2) / 2) + 
+            weight / Math.Sqrt(Math.PI * 2) * Math.Exp(-1 / 2 * Math.Pow(spread * (x - peak), 2 - 360) / 2);
+    }
 }

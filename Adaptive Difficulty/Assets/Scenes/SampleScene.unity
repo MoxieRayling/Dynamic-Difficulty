@@ -904,11 +904,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6463931834182320844, guid: c2b0c025fd70fc44db00e53bc3f28d3a,
         type: 3}
-      propertyPath: pixels.Array.size
-      value: 360
-      objectReference: {fileID: 0}
-    - target: {fileID: 6463931834182320844, guid: c2b0c025fd70fc44db00e53bc3f28d3a,
-        type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 558222100}
@@ -954,12 +949,6 @@ PrefabInstance:
       propertyPath: shooter6
       value: 
       objectReference: {fileID: 1794830890}
-    - target: {fileID: 6463931834182320844, guid: c2b0c025fd70fc44db00e53bc3f28d3a,
-        type: 3}
-      propertyPath: pixel
-      value: 
-      objectReference: {fileID: 2806618899048948879, guid: 28d259ae9a4d58740aaaeb3ffe6d63aa,
-        type: 3}
     - target: {fileID: 6463931834182320846, guid: c2b0c025fd70fc44db00e53bc3f28d3a,
         type: 3}
       propertyPath: m_LocalPosition.x
