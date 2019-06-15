@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,11 +12,12 @@ public class Room : MonoBehaviour
     public Shooter shooter5;
     public Shooter shooter6;
     public Player player;
+    public Canvas canvas;
     private List<Shooter> enemies;
     private Vector2 size;
     private GameObject[] shots;
-    public GameObject pixel;
-    private List<Pixel> pixels;
+    //public GameObject pixel;
+    //private List<Pixel> pixels;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,19 +30,13 @@ public class Room : MonoBehaviour
         EnemyFactory.Setup(shooter5, 1, 4, 4, 4);
         EnemyFactory.Setup(shooter6, 1, 4, 4, 4);
         player.SetTarget(NearestEnemy());
-        pixels = new List<Pixel>();
-        for(int i= 0; i < 360; i++)
-        {
-            pixels.Add(Instantiate(pixel, transform, false).GetComponent<Pixel>());
-            pixels[i].pos.x = (float)i / 30 - 6;
-        }
+        
     }
 
     // Update is called once per frame
     void Update()
     {
         shots = GameObject.FindGameObjectsWithTag("EnemyShot");
-        //Debug.Log("Shots: " + shots.Length);
         player.SetTarget(NearestEnemy());
         if (enemies.FindAll(enemy => enemy.enabled).Capacity == 0 && shots.Length == 0)
         {
@@ -72,8 +66,8 @@ public class Room : MonoBehaviour
 
     private void Graph()
     {
-        for(int i = 0; i<360; i++) {
-            pixels[i].pos.y = (float)Direction(i);
+        for(int i = 0; i<20; i++) {
+            var y = (float)Direction(i*18);
         }
     }
 
@@ -91,32 +85,36 @@ public class Room : MonoBehaviour
 
     private double Direction(double x)
     {
+
         var pos = player.transform.position;
         double result = 0;
-        
         enemies.ForEach(e => result += EnemyBias(x, e, e.transform.position - pos));
-
+        //Debug.Log("The value for " + x + " is " + result);
         shots.ToList().ForEach(s => result += ShotBias(x, s, s.transform.position - pos));
-        
+        //Debug.Log("The value for " + x + " is " + result);
         result += Dist(x, -1, 1, Mathf.Atan2(-1 * pos.y, -1 * pos.x) * Mathf.Rad2Deg);
-
+        Debug.Log("The value for " + x + " is " + result);
         return result;
     }
 
     private double ShotBias(double x, GameObject s, Vector3 dir)
     {
-        return Dist(x, 1, 1, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
+        return Dist(x, 100, 1, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
     }
 
     private double EnemyBias(double x, Shooter e, Vector3 dir)
     {
-        return Dist(x, Math.Exp(-1* dir.magnitude), 1, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
+        return Dist(x, Math.Exp(-1* dir.magnitude)*100, 1, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
     }
 
     private double Dist(double x, double weight, double spread, double peak)
     {
-        return weight / Math.Sqrt(Math.PI * 2) * Math.Exp(-1 / 2 * Math.Pow(spread * (x - peak), 2) / 2) +
-            weight / Math.Sqrt(Math.PI * 2) * Math.Exp(-1 / 2 * Math.Pow(spread * (x - peak + 360), 2) / 2) +
-            weight / Math.Sqrt(Math.PI * 2) * Math.Exp(-1 / 2 * Math.Pow(spread * (x - peak), 2 - 360) / 2);
+        if (x == 90) return 0;
+
+        var result = weight / Math.Sqrt(Math.PI * 2) * Math.Pow(Math.E, (-1 * Math.Pow(spread * (x - peak), 2) / 2)) +
+            weight / Math.Sqrt(Math.PI * 2) * Math.Pow(Math.E,    (-1 * Math.Pow(spread * (x - peak + 360), 2) / 2)) +
+            weight / Math.Sqrt(Math.PI * 2) * Math.Pow(Math.E,    (-1 * Math.Pow(spread * (x - peak - 360), 2) / 2));
+        Debug.Log("Input: " + x + ", Weight: " + weight + ", Spread: " + spread + ", Peak: " + peak + ", Result: " + result);
+        return result;
     }
 }
