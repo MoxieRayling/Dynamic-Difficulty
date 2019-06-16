@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,16 +13,17 @@ public class Room : MonoBehaviour
     public Shooter shooter5;
     public Shooter shooter6;
     public Player player;
-    public Canvas canvas;
     private List<Shooter> enemies;
     private Vector2 size;
-    private GameObject[] shots;
-    //public GameObject pixel;
-    //private List<Pixel> pixels;
-    // Start is called before the first frame update
+    private List<Shot> shots;
+    public Graph graph;
+    private bool busy;
+    private MovementGA ga;
+
     void Start()
     {
         size = gameObject.GetComponent<BoxCollider2D>().size;
+        shots = new List<Shot>();
         enemies = new List<Shooter>() { shooter1, shooter2, shooter3, shooter4, shooter5, shooter6 };
         EnemyFactory.Setup(shooter1, 1, 4, 4, 4);
         EnemyFactory.Setup(shooter2, 1, 4, 4, 4);
@@ -30,19 +32,52 @@ public class Room : MonoBehaviour
         EnemyFactory.Setup(shooter5, 1, 4, 4, 4);
         EnemyFactory.Setup(shooter6, 1, 4, 4, 4);
         player.SetTarget(NearestEnemy());
-        
+        ga = new MovementGA();
+        StartCoroutine(StartGA());
     }
 
-    // Update is called once per frame
+    public void RemoveShot(Shot shot)
+    {
+        shots.Remove(shot);
+    }
+
+    public void AddShot(Shot shot)
+    {
+        shots.Add(shot);
+    }
+
+    private void Reset()
+    {
+        shots.ForEach(s => Destroy(s.gameObject));
+        shots.Clear();
+        Shot.playerHits = 0;
+        enemies.ForEach(enemy => enemy.Revive());
+    }
+
     void Update()
     {
-        shots = GameObject.FindGameObjectsWithTag("EnemyShot");
         player.SetTarget(NearestEnemy());
-        if (enemies.FindAll(enemy => enemy.enabled).Capacity == 0 && shots.Length == 0)
+        if (enemies.FindAll(enemy => enemy.enabled).Capacity == 0)
         {
-            enemies.ForEach(enemy => enemy.Revive());
+            Reset();
         }
-        Graph();
+        graph.UpdatePos(player.transform.position);
+        player.SetDirection(graph.GetDirection());
+    }
+
+    public List<Shot> GetShots()
+    {
+        return shots.FindAll(s => s.target == "Player");
+    }
+
+    public List<Shooter> GetLivingEnemies()
+    {
+        return enemies.FindAll(e => e.enabled);
+    }
+
+    public Player GetPlayer()
+    {
+        return player;
     }
 
     public bool IsOutside(Vector2 pos)
@@ -64,13 +99,6 @@ public class Room : MonoBehaviour
         }
     }
 
-    private void Graph()
-    {
-        for(int i = 0; i<20; i++) {
-            var y = (float)Direction(i*18);
-        }
-    }
-
     private Shooter NearestEnemy()
     {
         var alive = enemies.FindAll(enemy => enemy.enabled);
@@ -82,39 +110,22 @@ public class Room : MonoBehaviour
         }
         return null;
     }
-
-    private double Direction(double x)
+    IEnumerator StartGA()
     {
-
-        var pos = player.transform.position;
-        double result = 0;
-        enemies.ForEach(e => result += EnemyBias(x, e, e.transform.position - pos));
-        //Debug.Log("The value for " + x + " is " + result);
-        shots.ToList().ForEach(s => result += ShotBias(x, s, s.transform.position - pos));
-        //Debug.Log("The value for " + x + " is " + result);
-        result += Dist(x, -1, 1, Mathf.Atan2(-1 * pos.y, -1 * pos.x) * Mathf.Rad2Deg);
-        Debug.Log("The value for " + x + " is " + result);
-        return result;
-    }
-
-    private double ShotBias(double x, GameObject s, Vector3 dir)
-    {
-        return Dist(x, 100, 1, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
-    }
-
-    private double EnemyBias(double x, Shooter e, Vector3 dir)
-    {
-        return Dist(x, Math.Exp(-1* dir.magnitude)*100, 1, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
-    }
-
-    private double Dist(double x, double weight, double spread, double peak)
-    {
-        if (x == 90) return 0;
-
-        var result = weight / Math.Sqrt(Math.PI * 2) * Math.Pow(Math.E, (-1 * Math.Pow(spread * (x - peak), 2) / 2)) +
-            weight / Math.Sqrt(Math.PI * 2) * Math.Pow(Math.E,    (-1 * Math.Pow(spread * (x - peak + 360), 2) / 2)) +
-            weight / Math.Sqrt(Math.PI * 2) * Math.Pow(Math.E,    (-1 * Math.Pow(spread * (x - peak - 360), 2) / 2));
-        Debug.Log("Input: " + x + ", Weight: " + weight + ", Spread: " + spread + ", Peak: " + peak + ", Result: " + result);
-        return result;
+        
+        for(int i = 0; i < 50; i++)
+        {
+            foreach(Candidate c in ga.GetCandidates())
+            {
+                player.SetSteering( c.GetGene(0).Value());
+                graph.SetCandidate(c);
+                yield return new WaitForSeconds(20);
+                ((MovementCand)c).SetScore(Shot.playerHits);
+                Reset();
+                player.ResetPositon();
+            }
+            ga.NextGen();
+        }
+        yield return new WaitForSeconds(1);
     }
 }

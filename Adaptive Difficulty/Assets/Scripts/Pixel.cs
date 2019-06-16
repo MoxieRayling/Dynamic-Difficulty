@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class Pixel : MonoBehaviour
 {
-    public RectTransform rt;
+    public SpriteRenderer sr;
+    public float val;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,6 +16,6 @@ public class Pixel : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        sr.color = new Color(255 - (val * 255), 0, 0);
     }
 }

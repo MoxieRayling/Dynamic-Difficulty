@@ -8,6 +8,8 @@ public class Player : MonoBehaviour
     public float speed;
     public GameObject shot;
     public Room room;
+    private Vector3 dir;
+    private Vector2 best;
     private Rigidbody2D rb;
     private CircleCollider2D col;
     private Vector3 change;
@@ -16,6 +18,7 @@ public class Player : MonoBehaviour
     private float fireRate = 1;
     private float shotSpeed = 4;
     private bool shooting = false;
+    private float steering;
 
     // Start is called before the first frame update
     void Start()
@@ -27,7 +30,9 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        MovePlayer();
         var pos = Camera.main.WorldToScreenPoint(transform.position);
+        /*
         var dir = Input.mousePosition - pos;
         var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + 180;
         transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
@@ -54,6 +59,11 @@ public class Player : MonoBehaviour
         }*/
     }
 
+    public void SetDirection(Vector2 dir)
+    {
+        this.best = dir;
+    }
+
     public Shooter GetTarget()
     {
         return target;
@@ -61,7 +71,10 @@ public class Player : MonoBehaviour
 
     void MovePlayer()
     {
-        rb.MovePosition(transform.position + change.normalized * speed * Time.deltaTime);
+        //rb.MovePosition(transform.position + change.normalized * speed * Time.deltaTime);
+
+        dir = new Vector3(dir.x + best.x*steering, dir.y + best.y*steering).normalized;
+        rb.MovePosition(transform.position + dir * speed * Time.deltaTime);
 
     }
 
@@ -100,5 +113,13 @@ public class Player : MonoBehaviour
         this.target = target;
     }
 
-    
+    public void SetSteering(double s)
+    {
+        this.steering = (float)s;
+    }
+
+    public void ResetPositon()
+    {
+        rb.MovePosition(new Vector2(0, 0));
+    }
 }

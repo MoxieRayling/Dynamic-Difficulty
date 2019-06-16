@@ -9,18 +9,27 @@ public class Shot : MonoBehaviour
     public Vector3 dir;
     public bool inactive = false;
     private Room room;
-    private static int playerHits = 0;
+    public static int playerHits = 0;
 
 
     void Start()
     {
+        room.AddShot(this);
     }
 
     void Update()
     {
         transform.position = transform.position + dir.normalized * vel * Time.deltaTime;
         if (room.IsOutside(transform.position))
-            Destroy(gameObject);
+        {
+            KillShot();
+        }
+    }
+
+    private void KillShot()
+    {
+        room.RemoveShot(this);
+        Destroy(gameObject);
     }
 
     void OnTriggerEnter2D(Collider2D col)
@@ -29,12 +38,12 @@ public class Shot : MonoBehaviour
         {
             col.gameObject.GetComponent<Shooter>().Hurt();
             inactive = true;
-            Destroy(gameObject);
+            KillShot();
         }
         if (col.tag == target && target == "Player")
         {
-            //Debug.Log(++playerHits);
-            Destroy(gameObject);
+            playerHits++;
+            KillShot();
         }
     }
 
