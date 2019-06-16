@@ -8,18 +8,19 @@ public class MovementCand : Candidate
 
     public MovementCand()
     {
-
+        genes = new List<Gene>();
     }
 
     public void NewCand()
     {
-        genes.Add(new DoubleGene(100, -100));
-        genes.Add(new DoubleGene(10000, -10000));
-        genes.Add(new DoubleGene(10000, -10000));
-        genes.Add(new DoubleGene(10000, -10000));
-        genes.Add(new DoubleGene(10000, -10000));
-        genes.Add(new DoubleGene(10000, -10000));
-        genes.Add(new DoubleGene(10000, -10000));
+        Random r = new Random();
+        genes.Add(new DoubleGene(100, -100,r.NextDouble()));
+        genes.Add(new DoubleGene(10000, -10000, r.NextDouble()));
+        genes.Add(new DoubleGene(10000, -10000, r.NextDouble()));
+        genes.Add(new DoubleGene(10000, -10000, r.NextDouble()));
+        genes.Add(new DoubleGene(10000, -10000, r.NextDouble()));
+        genes.Add(new DoubleGene(10000, -10000, r.NextDouble()));
+        genes.Add(new DoubleGene(10000, -10000, r.NextDouble()));
     }
 
     public override List<Candidate> Crossover(Candidate candidate)

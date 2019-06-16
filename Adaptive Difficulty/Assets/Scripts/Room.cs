@@ -33,6 +33,7 @@ public class Room : MonoBehaviour
         EnemyFactory.Setup(shooter6, 1, 4, 4, 4);
         player.SetTarget(NearestEnemy());
         ga = new MovementGA();
+        ga.GenerationZero();
         StartCoroutine(StartGA());
     }
 
@@ -117,15 +118,15 @@ public class Room : MonoBehaviour
         {
             foreach(Candidate c in ga.GetCandidates())
             {
+                Debug.Log(c.ToString() + "hi ");
                 player.SetSteering( c.GetGene(0).Value());
                 graph.SetCandidate(c);
-                yield return new WaitForSeconds(20);
+                yield return new WaitForSeconds(0.2f);
                 ((MovementCand)c).SetScore(Shot.playerHits);
                 Reset();
                 player.ResetPositon();
             }
             ga.NextGen();
         }
-        yield return new WaitForSeconds(1);
     }
 }

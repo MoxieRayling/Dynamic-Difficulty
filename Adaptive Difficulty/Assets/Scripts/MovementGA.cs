@@ -10,7 +10,7 @@ public class MovementGA : GeneticAlgorithm
 
     public MovementGA()
     {
-        GenerationZero();
+        cands = new List<Candidate>();
     }
 
     public void GenerationZero()
@@ -18,6 +18,7 @@ public class MovementGA : GeneticAlgorithm
         for (int i = 0; i < pop; i++)
         {
             cands.Add(new MovementCand());
+            ((MovementCand)cands[i]).NewCand();
         }
     }
 
