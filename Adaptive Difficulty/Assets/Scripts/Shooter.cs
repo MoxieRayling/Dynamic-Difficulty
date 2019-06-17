@@ -8,13 +8,13 @@ public class Shooter : MonoBehaviour
     public Transform target;
     public float speed;
     public float fireRate;
+    public int health;
+    public float shotSpeed;
     public Room room;
     private Rigidbody2D rb;
     private Vector3 change;
     public GameObject shot;
     private bool busy;
-    public int health;
-    public float shotSpeed;
     public Vector3 spawn;
     private SpriteRenderer sprite;
     private Collider2D col;
@@ -26,10 +26,9 @@ public class Shooter : MonoBehaviour
         spawn = transform.position;
         sprite = GetComponent<SpriteRenderer>();
         col = GetComponent<Collider2D>();
-        StartCoroutine(Startup());
     }
 
-    void Update()
+    void FixedUpdate()
     {
         float xDiff = transform.position.x - target.position.x;
         float yDiff = transform.position.y - target.position.y;
@@ -37,32 +36,28 @@ public class Shooter : MonoBehaviour
         bearing += 270;
         if (bearing > 180) bearing -= 360;
         //Debug.Log(bearing + " " + rb.rotation);
-        if ( rb.rotation < bearing + 15 && rb.rotation > bearing - 15 && !busy)
+        if (room.UpdateCount % fireRate == 0)
         {
-            StartCoroutine(Shot());
+            Shot();
         }
         if (!busy)
         {
-            var pos = transform.position;
-            var dir = target.position - pos;
-            var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + 90 ;
-            var targetRotation = Quaternion.AngleAxis(angle, Vector3.forward);
-            transform.rotation = targetRotation;
-            //transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, speed * Time.deltaTime);
+            //StartCoroutine(Shot());
         }
+
+        var pos = transform.position;
+        var dir = target.position - pos;
+        var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + 90 ;
+        var targetRotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        transform.rotation = targetRotation;
+        //transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, speed * Time.deltaTime);
+        
     }
 
-    IEnumerator Startup()
+    private void Shot()
     {
         busy = true;
-        yield return new WaitForSeconds(1);
-        busy = false;
-    }
-
-    IEnumerator Shot()
-    {
-        busy = true;
-        yield return new WaitForSeconds(0.15f/fireRate);
+     //   yield return new WaitForSeconds(0.15f/fireRate);
         var dir = target.position - transform.position;
 
         GameObject temp = Instantiate(shot, transform.position + dir.normalized * 0.5f, Quaternion.identity);
@@ -73,7 +68,7 @@ public class Shooter : MonoBehaviour
         script.SetRoom(room);
         temp.GetComponent<SpriteRenderer>().color = new Color(255,0,0);
         temp.tag = "EnemyShot";
-        yield return new WaitForSeconds(0.35f/fireRate);
+       // yield return new WaitForSeconds(0.35f/fireRate);
         busy = false;
     }
 
@@ -99,6 +94,5 @@ public class Shooter : MonoBehaviour
         col.enabled = true;
         sprite.enabled = true;
         health = 4;
-        StartCoroutine(Startup());
     }
 }

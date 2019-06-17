@@ -17,9 +17,9 @@ public class Shot : MonoBehaviour
         room.AddShot(this);
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        transform.position = transform.position + dir.normalized * vel * Time.deltaTime;
+        transform.position = transform.position + dir.normalized * 0.05f;// * Time.deltaTime;
         if (room.IsOutside(transform.position))
         {
             KillShot();

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public float speed;
+    public float speed = 0.15f;
     public GameObject shot;
     public Room room;
     private Vector3 dir;
@@ -15,10 +15,10 @@ public class Player : MonoBehaviour
     private Vector3 change;
     private bool dash = false;
     private Shooter target;
-    private float fireRate = 1;
-    private float shotSpeed = 4;
+    private float fireRate = 50;
+    private float shotSpeed = 0.03f;
     private bool shooting = false;
-    private float steering;
+    private float steering = 0.2f;
 
     // Start is called before the first frame update
     void Start()
@@ -28,10 +28,14 @@ public class Player : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         MovePlayer();
         var pos = Camera.main.WorldToScreenPoint(transform.position);
+        if (room.UpdateCount % fireRate == 0 && target != null)
+        {
+            Shoot();
+        }
         /*
         var dir = Input.mousePosition - pos;
         var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + 180;
@@ -48,9 +52,7 @@ public class Player : MonoBehaviour
         {
             StartCoroutine(Dash());
         }
-        if (!shooting && target != null) {
-            StartCoroutine(Shoot());
-        }
+        
         /*
         if (Input.GetMouseButtonDown(0))
         {
@@ -74,7 +76,7 @@ public class Player : MonoBehaviour
         //rb.MovePosition(transform.position + change.normalized * speed * Time.deltaTime);
 
         dir = new Vector3(dir.x + best.x*steering, dir.y + best.y*steering).normalized;
-        rb.MovePosition(transform.position + dir * speed * Time.deltaTime);
+        rb.MovePosition(transform.position + dir * speed);
 
     }
 
@@ -90,7 +92,7 @@ public class Player : MonoBehaviour
         dash = false;
     }
 
-    IEnumerator Shoot()
+    private void Shoot()
     {
         shooting = true;
 
@@ -104,7 +106,6 @@ public class Player : MonoBehaviour
         script.target = "Enemy";
         script.vel = shotSpeed;
         script.SetRoom(room);
-        yield return new WaitForSeconds(0.35f / fireRate);
         shooting = false;
     }
 
@@ -121,5 +122,6 @@ public class Player : MonoBehaviour
     public void ResetPositon()
     {
         rb.MovePosition(new Vector2(0, 0));
+        Debug.Log("I did it");
     }
 }

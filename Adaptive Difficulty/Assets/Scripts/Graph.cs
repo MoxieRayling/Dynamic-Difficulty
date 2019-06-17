@@ -11,20 +11,26 @@ public class Graph : MonoBehaviour
     private List<Pixel> pixels;
     private Vector2 pos;
     private Candidate candidate;
-
-    // Start is called before the first frame update
+    private double enemyWeight = 100;
+    private double enemySpread = 0.1;
+    private double shotWeight = 1000;
+    private double shotSpread = 0.05;
+    private double centerWeight = 0.1;
+    private double centerSpread = 0.035;
+    private Vector2 bestDir;
+    
     void Start()
     {
         pixels = new List<Pixel>();
+        bestDir = new Vector2(1, 0);
         for(int i = 0; i < 360; i++)
         {
-            Pixel p = Instantiate(pixelPrefab).GetComponent<Pixel>();
+            Pixel p = Instantiate(pixelPrefab, transform).GetComponent<Pixel>();
             p.transform.SetPositionAndRotation(Rotate(new Vector2(1, 0),i),Quaternion.identity);
             pixels.Add(p);
         }
     }
-
-    // Update is called once per frame
+    
     void Update()
     {
         for(int i = 0; i<360; i++)
@@ -32,10 +38,7 @@ public class Graph : MonoBehaviour
             pixels[i].val = (float)Direction(i);
             pixels[i].transform.SetPositionAndRotation(pos + Rotate(new Vector2(1, 0), i), Quaternion.identity);
         }
-    }
 
-    public Vector2 GetDirection()
-    {
         int max = 0;
         float val = pixels[0].val;
         for (int i = 1; i < 360; i++)
@@ -46,7 +49,18 @@ public class Graph : MonoBehaviour
                 max = i;
             }
         }
-        return Rotate(new Vector2(1, 0), max); 
+        pixels[max].sr.color = new Color(0,1,1);
+        //Debug.Log(max + " " + val);
+        bestDir = Rotate(new Vector2(1, 0), max);
+    }
+    private void LateUpdate()
+    {
+        
+    }
+
+    public Vector2 GetDirection()
+    {
+        return bestDir;
     }
 
     public void UpdatePos(Vector2 pos)
@@ -63,24 +77,24 @@ public class Graph : MonoBehaviour
         List<Shot> shots = room.GetShots();
         if(shots.Capacity>0) shots.ForEach(s => result += ShotBias(x, s, s.transform.position - pos));
         //Debug.Log("The value for " + x + " is " + result);
-        result += Dist((x+180)%360, pos.magnitude* candidate.GetGene(5).Value(), candidate.GetGene(6).Value(), Mathf.Atan2(-1 * pos.y, -1 * pos.x) * Mathf.Rad2Deg);
+        if(pos.magnitude > 5)
+            result += Dist((x+180)%360, pos.magnitude* centerWeight, centerSpread, Mathf.Atan2(-1 * pos.y, -1 * pos.x) * Mathf.Rad2Deg);
         //Debug.Log("The value for " + x + " is " + result);
         return result;
     }
 
     private double ShotBias(double x, Shot s, Vector3 dir)
     {
-        return Dist(x, candidate.GetGene(1).Value(), candidate.GetGene(2).Value(), Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
+        return Dist(x, dir.magnitude * shotWeight, dir.magnitude * shotSpread, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
     }
 
     private double EnemyBias(double x, Shooter e, Vector3 dir)
     {
-        return Dist(x, Math.Exp(-1 * dir.magnitude) * candidate.GetGene(3).Value(), candidate.GetGene(4).Value(), Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
+        return Dist(x, Math.Exp(-1 * dir.magnitude) * enemyWeight, enemySpread, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
     }
 
     private double Dist(double x, double weight, double spread, double peak)
     {
-        if (x == 90) return 0;
 
         var result = weight / Math.Sqrt(Math.PI * 2) * Math.Pow(Math.E, (-1 * Math.Pow(spread * (x - peak), 2) / 2)) +
             weight / Math.Sqrt(Math.PI * 2) * Math.Pow(Math.E, (-1 * Math.Pow(spread * (x - peak + 360), 2) / 2)) +

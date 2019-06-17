@@ -19,22 +19,27 @@ public class Room : MonoBehaviour
     public Graph graph;
     private bool busy;
     private MovementGA ga;
+    private int updateCount = 0;
+
+    public int UpdateCount { get => updateCount; }
+    public List<Shooter> Enemies { get => enemies; set => enemies = value; }
 
     void Start()
     {
         size = gameObject.GetComponent<BoxCollider2D>().size;
         shots = new List<Shot>();
         enemies = new List<Shooter>() { shooter1, shooter2, shooter3, shooter4, shooter5, shooter6 };
-        EnemyFactory.Setup(shooter1, 1, 4, 4, 4);
-        EnemyFactory.Setup(shooter2, 1, 4, 4, 4);
-        EnemyFactory.Setup(shooter3, 1, 4, 4, 4);
-        EnemyFactory.Setup(shooter4, 1, 4, 4, 4);
-        EnemyFactory.Setup(shooter5, 1, 4, 4, 4);
-        EnemyFactory.Setup(shooter6, 1, 4, 4, 4);
+        EnemyFactory.Setup(shooter1);
+        EnemyFactory.Setup(shooter2);
+        EnemyFactory.Setup(shooter3);
+        EnemyFactory.Setup(shooter4);
+        EnemyFactory.Setup(shooter5);
+        EnemyFactory.Setup(shooter6);
         player.SetTarget(NearestEnemy());
         ga = new MovementGA();
         ga.GenerationZero();
-        StartCoroutine(StartGA());
+
+        //StartCoroutine(StartGA());
     }
 
     public void RemoveShot(Shot shot)
@@ -52,15 +57,18 @@ public class Room : MonoBehaviour
         shots.ForEach(s => Destroy(s.gameObject));
         shots.Clear();
         Shot.playerHits = 0;
-        enemies.ForEach(enemy => enemy.Revive());
+        Enemies.ForEach(enemy => enemy.Revive());
     }
 
-    void Update()
+    void FixedUpdate()
     {
+        updateCount++;
+        Debug.Log(Shot.playerHits);
         player.SetTarget(NearestEnemy());
-        if (enemies.FindAll(enemy => enemy.enabled).Capacity == 0)
+        if (Enemies.FindAll(enemy => enemy.enabled).Capacity == 0)
         {
             Reset();
+            player.ResetPositon();
         }
         graph.UpdatePos(player.transform.position);
         player.SetDirection(graph.GetDirection());
@@ -73,7 +81,7 @@ public class Room : MonoBehaviour
 
     public List<Shooter> GetLivingEnemies()
     {
-        return enemies.FindAll(e => e.enabled);
+        return Enemies.FindAll(e => e.enabled);
     }
 
     public Player GetPlayer()
@@ -90,19 +98,22 @@ public class Room : MonoBehaviour
 
     void LateUpdate()
     {
-        foreach (Transform child in transform)
-        {
-            float xDiff = size.x / 2 - child.GetComponent<Collider2D>().bounds.size.x / 2;
-            float yDiff = size.y / 2 - child.GetComponent<Collider2D>().bounds.size.y / 2;
-            float x = Mathf.Clamp(child.position.x, -xDiff, xDiff);
-            float y = Mathf.Clamp(child.position.y, -yDiff, yDiff);
-            child.position = new Vector2(x, y);
-        }
+        Clamp(player.transform);
+
+    }
+
+    private void Clamp(Transform child)
+    {
+        float xDiff = size.x / 2 - child.GetComponent<Collider2D>().bounds.size.x / 2;
+        float yDiff = size.y / 2 - child.GetComponent<Collider2D>().bounds.size.y / 2;
+        float x = Mathf.Clamp(child.position.x, -xDiff, xDiff);
+        float y = Mathf.Clamp(child.position.y, -yDiff, yDiff);
+        child.position = new Vector2(x, y);
     }
 
     private Shooter NearestEnemy()
     {
-        var alive = enemies.FindAll(enemy => enemy.enabled);
+        var alive = Enemies.FindAll(enemy => enemy.enabled);
         if (alive.Capacity > 0)
         {
             Vector2 pPos = player.transform.position;

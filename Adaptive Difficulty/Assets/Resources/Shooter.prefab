@@ -117,10 +117,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 4190672832567877500, guid: eac976c4dd1db454681861cffc9efed1, type: 3}
   speed: 4
-  fireRate: 1
+  fireRate: 50
+  room: {fileID: 0}
   shot: {fileID: 6412475406630041680, guid: 24f7727a9a9dcf340a84789c231efc5c, type: 3}
   health: 4
-  shotSpeed: 4
+  shotSpeed: 0.03
   spawn: {x: 0, y: 2, z: 0}
 --- !u!60 &6987969538310127652
 PolygonCollider2D:

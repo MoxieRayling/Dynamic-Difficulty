@@ -19,6 +19,7 @@ public class CameraMovement : MonoBehaviour
     {
         if(transform.position != target.position)
         {
+            
             transform.position = Vector3.Lerp(
                 transform.position
                 , new Vector3(target.position.x, target.position.y, transform.position.z)
