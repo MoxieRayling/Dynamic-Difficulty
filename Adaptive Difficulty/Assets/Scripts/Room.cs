@@ -13,16 +13,15 @@ public class Room : MonoBehaviour
     public Shooter shooter5;
     public Shooter shooter6;
     public Player player;
-    private List<Shooter> enemies;
+    public Graph graph;
     private Vector2 size;
     private List<Shot> shots;
-    public Graph graph;
     private bool busy;
-    private MovementGA ga;
     private int updateCount = 0;
-
     public int UpdateCount { get => updateCount; }
+    private List<Shooter> enemies;
     public List<Shooter> Enemies { get => enemies; set => enemies = value; }
+    private DBManager dbm;
 
     void Start()
     {
@@ -36,10 +35,8 @@ public class Room : MonoBehaviour
         EnemyFactory.Setup(shooter5);
         EnemyFactory.Setup(shooter6);
         player.SetTarget(NearestEnemy());
-        ga = new MovementGA();
-        ga.GenerationZero();
-
-        //StartCoroutine(StartGA());
+        dbm = new DBManager();
+        player.Insert(dbm);
     }
 
     public void RemoveShot(Shot shot)
@@ -121,23 +118,5 @@ public class Room : MonoBehaviour
             return alive[0];
         }
         return null;
-    }
-    IEnumerator StartGA()
-    {
-        
-        for(int i = 0; i < 50; i++)
-        {
-            foreach(Candidate c in ga.GetCandidates())
-            {
-                Debug.Log(c.ToString() + "hi ");
-                player.SetSteering( c.GetGene(0).Value());
-                graph.SetCandidate(c);
-                yield return new WaitForSeconds(0.2f);
-                ((MovementCand)c).SetScore(Shot.playerHits);
-                Reset();
-                player.ResetPositon();
-            }
-            ga.NextGen();
-        }
     }
 }

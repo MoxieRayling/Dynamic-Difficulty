@@ -61,6 +61,11 @@ public class Player : MonoBehaviour
         }*/
     }
 
+    public void Insert(DBManager dbm)
+    {
+        dbm.InsertPlayer("nearest", 0, 0, speed, fireRate, shotSpeed);
+    }
+
     public void SetDirection(Vector2 dir)
     {
         this.best = dir;
@@ -121,6 +126,7 @@ public class Player : MonoBehaviour
 
     public void ResetPositon()
     {
+        transform.position.Set(0,0,0);
         rb.MovePosition(new Vector2(0, 0));
         Debug.Log("I did it");
     }

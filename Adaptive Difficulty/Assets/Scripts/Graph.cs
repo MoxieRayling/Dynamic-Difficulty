@@ -39,6 +39,10 @@ public class Graph : MonoBehaviour
             pixels[i].transform.SetPositionAndRotation(pos + Rotate(new Vector2(1, 0), i), Quaternion.identity);
         }
 
+        
+    }
+    private void LateUpdate()
+    {
         int max = 0;
         float val = pixels[0].val;
         for (int i = 1; i < 360; i++)
@@ -52,10 +56,6 @@ public class Graph : MonoBehaviour
         pixels[max].sr.color = new Color(0,1,1);
         //Debug.Log(max + " " + val);
         bestDir = Rotate(new Vector2(1, 0), max);
-    }
-    private void LateUpdate()
-    {
-        
     }
 
     public Vector2 GetDirection()
