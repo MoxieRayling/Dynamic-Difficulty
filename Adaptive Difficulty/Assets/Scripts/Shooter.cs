@@ -28,30 +28,51 @@ public class Shooter : MonoBehaviour
         col = GetComponent<Collider2D>();
     }
 
+    public void Deactivate()
+    {
+        Debug.Log("hi");
+        enabled = false;
+        Debug.Log("hi");
+        col.enabled = false;
+        Debug.Log("hi");
+        sprite.enabled = false;
+        Debug.Log("hi");
+    }
+
+    public void Randomize()
+    {
+        System.Random r = new System.Random();
+        health = r.Next(1, 10);
+        fireRate = r.Next(10, 100);
+        shotSpeed = r.Next() / 10;
+    }
+
     void FixedUpdate()
     {
-        float xDiff = transform.position.x - target.position.x;
-        float yDiff = transform.position.y - target.position.y;
-        float bearing = (float)(Math.Atan2(yDiff, xDiff) * 180.0 / Math.PI);
-        bearing += 270;
-        if (bearing > 180) bearing -= 360;
-        //Debug.Log(bearing + " " + rb.rotation);
-        if (room.UpdateCount % fireRate == 0)
+        if (enabled)
         {
-            Shot();
-        }
-        if (!busy)
-        {
-            //StartCoroutine(Shot());
-        }
+            float xDiff = transform.position.x - target.position.x;
+            float yDiff = transform.position.y - target.position.y;
+            float bearing = (float)(Math.Atan2(yDiff, xDiff) * 180.0 / Math.PI);
+            bearing += 270;
+            if (bearing > 180) bearing -= 360;
+            //Debug.Log(bearing + " " + rb.rotation);
+            if (room.UpdateCount % fireRate == 0)
+            {
+                Shot();
+            }
+            if (!busy)
+            {
+                //StartCoroutine(Shot());
+            }
 
-        var pos = transform.position;
-        var dir = target.position - pos;
-        var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + 90 ;
-        var targetRotation = Quaternion.AngleAxis(angle, Vector3.forward);
-        transform.rotation = targetRotation;
-        //transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, speed * Time.deltaTime);
-        
+            var pos = transform.position;
+            var dir = target.position - pos;
+            var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + 90;
+            var targetRotation = Quaternion.AngleAxis(angle, Vector3.forward);
+            transform.rotation = targetRotation;
+            //transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, speed * Time.deltaTime);
+        }
     }
 
     private void Shot()

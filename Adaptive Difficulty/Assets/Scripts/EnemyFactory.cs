@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Random = System.Random;
 
 public class EnemyFactory
 {
@@ -12,5 +14,18 @@ public class EnemyFactory
         script.health = 4;
         script.speed = 0;
         script.shotSpeed = 0.1f;
+    }
+
+    public static void GetRandWave(List<Shooter> enemies)
+    {
+        Random r = new Random();
+        enemies.Sort((x, y) => r.Next(-1, 1));
+        for (int i = 0; i< enemies.Capacity; i++)
+        {
+            if (r.Next() < (i + 1) / enemies.Capacity)
+                enemies[i].Randomize();
+            else
+                enemies[i].Deactivate();
+        }
     }
 }

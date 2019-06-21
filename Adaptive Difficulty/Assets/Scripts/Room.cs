@@ -28,12 +28,7 @@ public class Room : MonoBehaviour
         size = gameObject.GetComponent<BoxCollider2D>().size;
         shots = new List<Shot>();
         enemies = new List<Shooter>() { shooter1, shooter2, shooter3, shooter4, shooter5, shooter6 };
-        EnemyFactory.Setup(shooter1);
-        EnemyFactory.Setup(shooter2);
-        EnemyFactory.Setup(shooter3);
-        EnemyFactory.Setup(shooter4);
-        EnemyFactory.Setup(shooter5);
-        EnemyFactory.Setup(shooter6);
+        EnemyFactory.GetRandWave(enemies);
         player.SetTarget(NearestEnemy());
         dbm = new DBManager();
         player.Insert(dbm);
@@ -55,6 +50,7 @@ public class Room : MonoBehaviour
         shots.Clear();
         Shot.playerHits = 0;
         Enemies.ForEach(enemy => enemy.Revive());
+        EnemyFactory.GetRandWave(enemies);
     }
 
     void FixedUpdate()
