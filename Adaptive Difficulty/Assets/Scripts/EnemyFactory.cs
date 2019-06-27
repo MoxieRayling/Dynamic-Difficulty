@@ -20,12 +20,14 @@ public class EnemyFactory
     {
         Random r = new Random();
         enemies.Sort((x, y) => r.Next(-1, 1));
-        for (int i = 0; i< enemies.Capacity; i++)
+        int limit = r.Next(1, 6);
+        for (int i = 0; i < 6; i++)
         {
-            if (r.Next() < (i + 1) / enemies.Capacity)
+            if (i < limit) { 
                 enemies[i].Randomize();
+            }
             else
-                enemies[i].Deactivate();
+                enemies[i].SetInactive();
         }
     }
 }

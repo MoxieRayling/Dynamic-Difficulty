@@ -19,7 +19,7 @@ public class Shot : MonoBehaviour
 
     void FixedUpdate()
     {
-        transform.position = transform.position + dir.normalized * vel  ;// * Time.deltaTime;
+        transform.position = transform.position + dir.normalized * vel;
         if (room.IsOutside(transform.position))
         {
             KillShot();
@@ -43,6 +43,8 @@ public class Shot : MonoBehaviour
         if (col.tag == target && target == "Player")
         {
             playerHits++;
+
+            Debug.Log(playerHits);
             KillShot();
         }
     }

@@ -19,6 +19,9 @@ public class Player : MonoBehaviour
     private float shotSpeed = 0.03f;
     private bool shooting = false;
     private float steering = 0.2f;
+    private bool reset = false;
+
+    public bool Reset { get => reset; set => reset = value; }
 
     // Start is called before the first frame update
     void Start()
@@ -36,29 +39,6 @@ public class Player : MonoBehaviour
         {
             Shoot();
         }
-        /*
-        var dir = Input.mousePosition - pos;
-        var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + 180;
-        transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-
-        change = Vector3.zero;
-        change.x = Input.GetAxisRaw("Horizontal");
-        change.y = Input.GetAxisRaw("Vertical");
-        if(change != Vector3.zero)
-        {
-            MovePlayer();
-        }
-        if (Input.GetKeyDown("space") && !dash)
-        {
-            StartCoroutine(Dash());
-        }
-        
-        /*
-        if (Input.GetMouseButtonDown(0))
-        {
-            GameObject temp = Instantiate(hit, transform.position + dir.normalized * 0.5f, Quaternion.AngleAxis(angle, Vector3.forward));
-            temp.GetComponent<HitScript>().target = "Enemy";
-        }*/
     }
 
     public void Insert(DBManager dbm)
@@ -78,11 +58,17 @@ public class Player : MonoBehaviour
 
     void MovePlayer()
     {
-        //rb.MovePosition(transform.position + change.normalized * speed * Time.deltaTime);
-
-        dir = new Vector3(dir.x + best.x*steering, dir.y + best.y*steering).normalized;
-        rb.MovePosition(transform.position + dir * speed);
-
+        if (Reset) { 
+            rb.MovePosition(new Vector2(0, 0));
+            Debug.Log("reset");
+            Reset = false;
+            return;
+        }
+        else
+        {
+            dir = new Vector3(dir.x + best.x * steering, dir.y + best.y * steering).normalized;
+            rb.MovePosition(transform.position + dir * speed);
+        }
     }
 
     IEnumerator Dash()
@@ -122,12 +108,5 @@ public class Player : MonoBehaviour
     public void SetSteering(double s)
     {
         this.steering = (float)s;
-    }
-
-    public void ResetPositon()
-    {
-        transform.position.Set(0,0,0);
-        rb.MovePosition(new Vector2(0, 0));
-        Debug.Log("I did it");
     }
 }

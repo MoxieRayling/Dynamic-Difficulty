@@ -56,12 +56,11 @@ public class Room : MonoBehaviour
     void FixedUpdate()
     {
         updateCount++;
-        Debug.Log(Shot.playerHits);
         player.SetTarget(NearestEnemy());
         if (Enemies.FindAll(enemy => enemy.enabled).Capacity == 0)
         {
             Reset();
-            player.ResetPositon();
+            player.Reset = true;
         }
         graph.UpdatePos(player.transform.position);
         player.SetDirection(graph.GetDirection());
@@ -84,8 +83,9 @@ public class Room : MonoBehaviour
 
     public bool IsOutside(Vector2 pos)
     {
-        if (pos.x > size.x / 2 || pos.x < -size.x / 2 || pos.y > size.y / 2 || pos.y < -size.y / 2)
+        if (pos.x > size.x / 2 || pos.x < -size.x / 2 || pos.y > size.y / 2 || pos.y < -size.y / 2) {
             return true;
+        }
         return false;
     }
 
