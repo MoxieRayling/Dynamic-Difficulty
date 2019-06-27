@@ -25,6 +25,7 @@ public class EnemyFactory
         {
             if (i < limit) { 
                 enemies[i].Randomize();
+                enemies[i].Id = i+1;
             }
             else
                 enemies[i].SetInactive();

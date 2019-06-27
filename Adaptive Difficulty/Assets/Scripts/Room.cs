@@ -21,6 +21,8 @@ public class Room : MonoBehaviour
     public int UpdateCount { get => updateCount; }
     private List<Shooter> enemies;
     public List<Shooter> Enemies { get => enemies; set => enemies = value; }
+    private int wave = 1;
+    public int Wave { get => wave; }
     private DBManager dbm;
 
     void Start()
@@ -51,6 +53,7 @@ public class Room : MonoBehaviour
         Shot.playerHits = 0;
         Enemies.ForEach(enemy => enemy.Revive());
         EnemyFactory.GetRandWave(enemies);
+        wave++;
     }
 
     void FixedUpdate()

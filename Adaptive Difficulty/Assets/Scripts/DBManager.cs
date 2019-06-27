@@ -114,6 +114,5 @@ public class DBManager
           " INSERT INTO PLAYERS (TARGET_MODE, REACTION_SPEED, ACCURACY, MOVEMENT_SPEED, FIRE_RATE, SHOT_SPEED)" +
           " VALUES (\"" + target + "\", "+react + ", " + acc +", " + move+", "+ fireRate+", "+ shotSpeed +" );";
         reader = dbcmd.ExecuteReader();
-        Debug.Log("ME");
     }
 }
