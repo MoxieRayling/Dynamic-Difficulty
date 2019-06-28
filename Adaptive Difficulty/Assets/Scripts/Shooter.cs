@@ -7,9 +7,10 @@ public class Shooter : MonoBehaviour
 {
     public Transform target;
     public float speed;
-    public float fireRate;
-    public int health;
-    public float shotSpeed;
+    private float fireRate;
+    private int health;
+    private int maxHealth;
+    private float shotSpeed;
     public Room room;
     private Rigidbody2D rb;
     public GameObject shot;
@@ -17,9 +18,18 @@ public class Shooter : MonoBehaviour
     private Collider2D col;
     private bool inactive = false;
     private int id = 0;
-    public int Id { get => id; set => id = value; }
     private int lifeTime = 0;
+    private int shotsFired = 0;
+    private int hits = 0;
+
+    public int Id { get => id; set => id = value; }
     public int LifeTime { get => lifeTime; set => lifeTime = value; }
+    public float ShotSpeed { get => shotSpeed; set => shotSpeed = value; }
+    public float FireRate { get => fireRate; set => fireRate = value; }
+    public int Health { get => health; set => health = value; }
+    public int ShotsFired { get => shotsFired; set => shotsFired = value; }
+    public int MaxHealth { get => maxHealth; set => maxHealth = value; }
+    public int Hits { get => hits; set => hits = value; }
 
     void Start()
     {
@@ -43,10 +53,12 @@ public class Shooter : MonoBehaviour
 
     public void Randomize()
     {
-        health = (int)Math.Round((UnityEngine.Random.value + 0.1) * 10);
-        shotSpeed = UnityEngine.Random.value / 10 + 0.01f;
-        fireRate = (int)Math.Round(UnityEngine.Random.value * 90) + 30;
-        lifeTime = 0;
+        Health = (int)Math.Round((UnityEngine.Random.value + 0.1) * 10);
+        MaxHealth = Health;
+        ShotSpeed = UnityEngine.Random.value / 10 + 0.01f;
+        FireRate = (int)Math.Round(UnityEngine.Random.value * 90) + 30;
+        LifeTime = 0;
+        ShotsFired = 0;
     }
 
     void FixedUpdate()
@@ -62,7 +74,7 @@ public class Shooter : MonoBehaviour
             float xDiff = transform.position.x - target.position.x;
             float yDiff = transform.position.y - target.position.y;
 
-            if (room.UpdateCount % fireRate == 0)
+            if (room.UpdateCount % FireRate == 0)
             {
                 Shoot();
             }
@@ -77,13 +89,15 @@ public class Shooter : MonoBehaviour
 
     private void Shoot()
     {
+        shotsFired++;
         var dir = target.position - transform.position;
 
         GameObject temp = Instantiate(shot, transform.position + dir.normalized * 0.5f, Quaternion.identity);
         var script = temp.GetComponent<Shot>();
         script.dir = dir;
+        script.enemy = this;
         script.target = "Player";
-        script.vel = shotSpeed;
+        script.vel = ShotSpeed;
         script.SetRoom(room);
         temp.GetComponent<SpriteRenderer>().color = new Color(255,0,0);
         temp.tag = "EnemyShot";
@@ -91,9 +105,10 @@ public class Shooter : MonoBehaviour
 
     public void Hurt()
     {
-        health--;
-        if (health <= 0)
+        Health--;
+        if (Health <= 0)
         {
+            room.InsertEnemy(this);
             Deactivate();
         }
     }
@@ -103,7 +118,7 @@ public class Shooter : MonoBehaviour
         enabled = true;
         col.enabled = true;
         sprite.enabled = true;
-        health = 4;
+        Health = 4;
         inactive = false;
     }
 }

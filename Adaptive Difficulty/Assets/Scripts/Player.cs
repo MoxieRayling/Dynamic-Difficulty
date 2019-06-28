@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public float speed = 0.15f;
+    private float speed = 0.15f;
     public GameObject shot;
     public Room room;
     private Vector3 dir;
@@ -20,8 +20,18 @@ public class Player : MonoBehaviour
     private bool shooting = false;
     private float steering = 0.2f;
     private bool reset = false;
+    private string targetting = "nearest";
+    private float reactionSpeed = 0;
+    private float accuracy = 0;
+
 
     public bool Reset { get => reset; set => reset = value; }
+    public float FireRate { get => fireRate; set => fireRate = value; }
+    public string Targetting { get => targetting; set => targetting = value; }
+    public float ShotSpeed { get => shotSpeed; set => shotSpeed = value; }
+    public float Speed { get => speed; set => speed = value; }
+    public float Accuracy { get => accuracy; set => accuracy = value; }
+    public float ReactionSpeed { get => reactionSpeed; set => reactionSpeed = value; }
 
     // Start is called before the first frame update
     void Start()
@@ -35,15 +45,10 @@ public class Player : MonoBehaviour
     {
         MovePlayer();
         var pos = Camera.main.WorldToScreenPoint(transform.position);
-        if (room.UpdateCount % fireRate == 0 && target != null)
+        if (room.UpdateCount % FireRate == 0 && target != null)
         {
             Shoot();
         }
-    }
-
-    public void Insert(DBManager dbm)
-    {
-        dbm.InsertPlayer("nearest", 0, 0, speed, fireRate, shotSpeed);
     }
 
     public void SetDirection(Vector2 dir)
@@ -67,7 +72,7 @@ public class Player : MonoBehaviour
         else
         {
             dir = new Vector3(dir.x + best.x * steering, dir.y + best.y * steering).normalized;
-            rb.MovePosition(transform.position + dir * speed);
+            rb.MovePosition(transform.position + dir * Speed);
         }
     }
 
@@ -75,10 +80,10 @@ public class Player : MonoBehaviour
     {
         dash = true;
         col.enabled = false;
-        speed = 20;
+        Speed = 20;
         yield return new WaitForSeconds(0.3f);
         col.enabled = true;
-        speed = 4;
+        Speed = 4;
         yield return new WaitForSeconds(0.3f);
         dash = false;
     }
@@ -95,7 +100,7 @@ public class Player : MonoBehaviour
         var script = temp.GetComponent<Shot>();
         script.dir = dir;
         script.target = "Enemy";
-        script.vel = shotSpeed;
+        script.vel = ShotSpeed;
         script.SetRoom(room);
         shooting = false;
     }

@@ -17,13 +17,20 @@ public class Room : MonoBehaviour
     private Vector2 size;
     private List<Shot> shots;
     private bool busy;
-    private int updateCount = 0;
-    public int UpdateCount { get => updateCount; }
-    private List<Shooter> enemies;
-    public List<Shooter> Enemies { get => enemies; set => enemies = value; }
-    private int wave = 1;
-    public int Wave { get => wave; }
     private DBManager dbm;
+    private int test;
+    private int shotsFired = 0;
+    private int updateCount = 0;
+    private List<Shooter> enemies;
+    private int wave = 1;
+    private int shotsOnScreen = 0;
+    private int hits = 0;
+
+    public int UpdateCount { get => updateCount; }
+    public List<Shooter> Enemies { get => enemies; set => enemies = value; }
+    public int Wave { get => wave; }
+    public int ShotsOnScreen { get => shotsOnScreen; set => shotsOnScreen = value; }
+    public int Hits { get => hits; set => hits = value; }
 
     void Start()
     {
@@ -33,7 +40,15 @@ public class Room : MonoBehaviour
         EnemyFactory.GetRandWave(enemies);
         player.SetTarget(NearestEnemy());
         dbm = new DBManager();
-        player.Insert(dbm);
+        test = dbm.TestCount()+1;
+        Debug.Log("Test " + test);
+        dbm.InsertPlayer(player, wave, test);
+        dbm.InsertTest(test, "setup");
+    }
+
+    public void InsertShot(int enemyId)
+    {
+        dbm.InsertHit(enemyId, wave, test, shotsOnScreen);
     }
 
     public void RemoveShot(Shot shot)
@@ -43,17 +58,22 @@ public class Room : MonoBehaviour
 
     public void AddShot(Shot shot)
     {
+        shotsFired++;
         shots.Add(shot);
     }
 
     private void Reset()
     {
+        dbm.InsertWave(wave, test, enemies.FindAll(e => e.Id > 0).Count,Hits,updateCount, shotsFired );
         shots.ForEach(s => Destroy(s.gameObject));
         shots.Clear();
-        Shot.playerHits = 0;
         Enemies.ForEach(enemy => enemy.Revive());
         EnemyFactory.GetRandWave(enemies);
         wave++;
+        updateCount = 0;
+        shotsFired = 0;
+        shotsOnScreen = 0;
+        hits = 0;
     }
 
     void FixedUpdate()
@@ -105,6 +125,11 @@ public class Room : MonoBehaviour
         float x = Mathf.Clamp(child.position.x, -xDiff, xDiff);
         float y = Mathf.Clamp(child.position.y, -yDiff, yDiff);
         child.position = new Vector2(x, y);
+    }
+
+    public void InsertEnemy(Shooter s)
+    {
+        dbm.InsertEnemy(s, wave, test);
     }
 
     private Shooter NearestEnemy()

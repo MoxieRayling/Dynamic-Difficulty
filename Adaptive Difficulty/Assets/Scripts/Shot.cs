@@ -9,12 +9,12 @@ public class Shot : MonoBehaviour
     public Vector3 dir;
     public bool inactive = false;
     private Room room;
-    public static int playerHits = 0;
-
+    public Shooter enemy;
 
     void Start()
     {
         room.AddShot(this);
+        if (target == "Player") room.ShotsOnScreen++;
     }
 
     void FixedUpdate()
@@ -42,9 +42,11 @@ public class Shot : MonoBehaviour
         }
         if (col.tag == target && target == "Player")
         {
-            playerHits++;
-
-            Debug.Log(playerHits);
+            room.Hits++;
+            Debug.Log(room.Hits);
+            room.InsertShot(enemy.Id);
+            enemy.Hits++;
+            room.ShotsOnScreen--;
             KillShot();
         }
     }
