@@ -16,7 +16,7 @@ public class Player : MonoBehaviour
     private bool dash = false;
     private Shooter target;
     private float fireRate = 50;
-    private float shotSpeed = 0.03f;
+    private float shotSpeed = 0.05f;
     private bool shooting = false;
     private float steering = 0.2f;
     private bool reset = false;

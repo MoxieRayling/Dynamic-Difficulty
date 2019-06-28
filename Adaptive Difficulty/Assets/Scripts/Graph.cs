@@ -13,7 +13,7 @@ public class Graph : MonoBehaviour
     private Candidate candidate;
     private double enemyWeight = 100;
     private double enemySpread = 0.1;
-    private double shotWeight = 1000;
+    private double shotWeight = 10;
     private double shotSpread = 0.05;
     private double centerWeight = 0.1;
     private double centerSpread = 0.035;

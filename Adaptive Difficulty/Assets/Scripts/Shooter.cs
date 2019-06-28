@@ -59,6 +59,7 @@ public class Shooter : MonoBehaviour
         FireRate = (int)Math.Round(UnityEngine.Random.value * 90) + 30;
         LifeTime = 0;
         ShotsFired = 0;
+        Hits = 0;
     }
 
     void FixedUpdate()
