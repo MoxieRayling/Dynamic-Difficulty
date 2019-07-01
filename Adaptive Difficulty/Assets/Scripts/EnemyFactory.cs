@@ -20,7 +20,7 @@ public class EnemyFactory
     {
         Random r = new Random();
         enemies.Sort((x, y) => r.Next(-1, 1));
-        int limit = r.Next(1, 6);
+        int limit = r.Next(1, 7);
         for (int i = 0; i < 6; i++)
         {
             if (i < limit)

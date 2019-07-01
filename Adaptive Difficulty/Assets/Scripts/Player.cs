@@ -15,11 +15,14 @@ public class Player : MonoBehaviour
     private Vector3 change;
     private bool dash = false;
     private Shooter target;
-    private float fireRate = 50;
-    private float shotSpeed = 0.05f;
     private bool shooting = false;
     private float steering = 0.2f;
+    private bool invincible = false;
+    private int invincibility = 0;
+    private float fireRate = 50;
+    private float shotSpeed = 0.05f;
     private bool reset = false;
+    private bool flip = false;
     private string targetting = "nearest";
     private float reactionSpeed = 0;
     private float accuracy = 0;
@@ -32,6 +35,9 @@ public class Player : MonoBehaviour
     public float Speed { get => speed; set => speed = value; }
     public float Accuracy { get => accuracy; set => accuracy = value; }
     public float ReactionSpeed { get => reactionSpeed; set => reactionSpeed = value; }
+    public bool Flip { get => flip; set => flip = value; }
+    public bool Invincible { get => invincible; set => invincible = value; }
+    public Shooter Target { get => target; set => target = value; }
 
     // Start is called before the first frame update
     void Start()
@@ -43,9 +49,11 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (invincibility > 0 && Invincible) invincibility--;
+        else Invincible = false;
         MovePlayer();
         var pos = Camera.main.WorldToScreenPoint(transform.position);
-        if (room.UpdateCount % FireRate == 0 && target != null)
+        if (room.UpdateCount % FireRate == 0 && Target != null)
         {
             Shoot();
         }
@@ -56,19 +64,22 @@ public class Player : MonoBehaviour
         this.best = dir;
     }
 
-    public Shooter GetTarget()
-    {
-        return target;
-    }
-
     void MovePlayer()
     {
-        if (Reset) { 
+        if (Reset)
+        {
             rb.MovePosition(new Vector2(0, 0));
             Debug.Log("reset");
             Reset = false;
             return;
         }
+      /*else if (Flip)
+        {
+            rb.MovePosition(rb.position * -1);
+            Debug.Log("Flip");
+            Flip = false;
+            return;
+        }*/
         else
         {
             dir = new Vector3(dir.x + best.x * steering, dir.y + best.y * steering).normalized;
@@ -93,7 +104,7 @@ public class Player : MonoBehaviour
         shooting = true;
 
         var pos = transform.position;
-        var dir = target.transform.position - pos;
+        var dir = Target.transform.position - pos;
         var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90;
 
         GameObject temp = Instantiate(shot, transform.position + dir.normalized * 0.5f, Quaternion.AngleAxis(angle, Vector3.forward));
@@ -105,13 +116,14 @@ public class Player : MonoBehaviour
         shooting = false;
     }
 
-    public void SetTarget(Shooter target)
-    {
-        this.target = target;
-    }
-
     public void SetSteering(double s)
     {
         this.steering = (float)s;
+    }
+
+    public void Hit()
+    {
+        Invincible = true;
+        invincibility = 100;
     }
 }

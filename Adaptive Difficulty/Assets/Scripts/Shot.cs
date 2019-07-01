@@ -9,7 +9,9 @@ public class Shot : MonoBehaviour
     public Vector3 dir;
     public bool inactive = false;
     private Room room;
-    public Shooter enemy;
+    private Shooter enemy;
+
+    public Shooter Enemy { get => enemy; set => enemy = value; }
 
     void Start()
     {
@@ -42,10 +44,8 @@ public class Shot : MonoBehaviour
         }
         if (col.tag == target && target == "Player")
         {
-            room.Hits++;
-            Debug.Log(room.Hits);
-            room.InsertShot(enemy.Id);
-            enemy.Hits++;
+            room.InsertShot(Enemy.Id);
+            room.HitPlayer(this);
             room.ShotsOnScreen--;
             KillShot();
         }

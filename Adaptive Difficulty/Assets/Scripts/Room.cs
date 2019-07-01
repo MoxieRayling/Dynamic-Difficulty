@@ -38,12 +38,40 @@ public class Room : MonoBehaviour
         shots = new List<Shot>();
         enemies = new List<Shooter>() { shooter1, shooter2, shooter3, shooter4, shooter5, shooter6 };
         EnemyFactory.GetRandWave(enemies);
-        player.SetTarget(NearestEnemy());
+        player.Target = NearestEnemy();
         dbm = new DBManager();
         test = dbm.TestCount()+1;
         Debug.Log("Test " + test);
         dbm.InsertPlayer(player, wave, test);
         dbm.InsertTest(test, "setup");
+    }
+
+    void FixedUpdate()
+    {
+        updateCount++;
+        if(player.Target == null || !player.Target.enabled)
+            player.Target = NearestEnemy();
+        if (Enemies.FindAll(enemy => enemy.enabled).Capacity == 0)
+        {
+            Reset();
+            player.Reset = true;
+        }
+        graph.UpdatePos(player.transform.position);
+        player.SetDirection(graph.GetDirection());
+    }
+
+    public void HitPlayer(Shot s)
+    {
+        if (player.Invincible) {
+            Debug.Log("Miss");
+        }
+        else
+        {
+            Hits++;
+            s.Enemy.Hits++;
+            Debug.Log("Hits: " + Hits);
+            player.Hit();
+        }
     }
 
     public void InsertShot(int enemyId)
@@ -74,19 +102,6 @@ public class Room : MonoBehaviour
         shotsFired = 0;
         shotsOnScreen = 0;
         hits = 0;
-    }
-
-    void FixedUpdate()
-    {
-        updateCount++;
-        player.SetTarget(NearestEnemy());
-        if (Enemies.FindAll(enemy => enemy.enabled).Capacity == 0)
-        {
-            Reset();
-            player.Reset = true;
-        }
-        graph.UpdatePos(player.transform.position);
-        player.SetDirection(graph.GetDirection());
     }
 
     public List<Shot> GetShots()

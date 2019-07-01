@@ -39,29 +39,6 @@ public class Shooter : MonoBehaviour
         col = GetComponent<Collider2D>();
     }
 
-    public void SetInactive()
-    {
-        inactive = true;
-    }
-
-    public void Deactivate()
-    {
-        enabled = false;
-        col.enabled = false;
-        sprite.enabled = false;
-    }
-
-    public void Randomize()
-    {
-        Health = (int)Math.Round((UnityEngine.Random.value + 0.1) * 10);
-        MaxHealth = Health;
-        ShotSpeed = UnityEngine.Random.value / 10 + 0.01f;
-        FireRate = (int)Math.Round(UnityEngine.Random.value * 90) + 30;
-        LifeTime = 0;
-        ShotsFired = 0;
-        Hits = 0;
-    }
-
     void FixedUpdate()
     {
         
@@ -88,6 +65,31 @@ public class Shooter : MonoBehaviour
         }
     }
 
+    public void SetInactive()
+    {
+        inactive = true;
+    }
+
+    public void Deactivate()
+    {
+        enabled = false;
+        col.enabled = false;
+        sprite.enabled = false;
+    }
+
+    public void Randomize()
+    {
+        Health = (int)Math.Round((UnityEngine.Random.value + 0.1) * 10);
+        MaxHealth = Health;
+        ShotSpeed = UnityEngine.Random.value / 5 + 0.01f;
+        FireRate = (int)Math.Round(UnityEngine.Random.value * 90) + 30;
+        LifeTime = 0;
+        ShotsFired = 0;
+        Hits = 0;
+    }
+
+   
+
     private void Shoot()
     {
         shotsFired++;
@@ -96,7 +98,7 @@ public class Shooter : MonoBehaviour
         GameObject temp = Instantiate(shot, transform.position + dir.normalized * 0.5f, Quaternion.identity);
         var script = temp.GetComponent<Shot>();
         script.dir = dir;
-        script.enemy = this;
+        script.Enemy = this;
         script.target = "Player";
         script.vel = ShotSpeed;
         script.SetRoom(room);
