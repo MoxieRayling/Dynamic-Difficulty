@@ -1,0 +1,148 @@
+I'm narrowing my focus to a specific genre of video game, namely 'rogue-like' and 'bullet hell', the former being a type of game that makes heavy use of procedural generation, and the latter being a type of game that derives its difficulty from having the player path around many bullets on screen.
+
+There are two popular games that I'm familiar with that share these genres which will make good case studies in which i'll discuss how they handle difficulty balancing. From here I can discuss why an automated solution for difficulty balancing would be beneficial.
+
+With this in mind the goal of the project is to create a wave of enemies such that the difficulty is appropriate for the skill of the player. The difficulty of the wave can be calculated from the likelihood of getting hit (HitRate) multiplied by the longevity of the wave. The HitRate can be calculated with respect to the number of bullets on screen (n) such that the probability of getting hit by a bullet x can be interpretted as P(x|n). The actual probability will be approximated by running simulations and recording how many times the simulated player is hit and how many bullets were on screen at the time.
+
+The secondary goal will be to create waves that are varied from each other, because a game that spawns the same or similar waves over and over again would be boring and would compromise the goal of an engaging level of difficulty. To this end I plan to vary the enemies in 3 ways: 
+ - changing the attack patterns e.g. firing 3 bullets in quick succession, firing 5 bullets in a horizontal arc, firing 10 in random directions etc.
+ - changing the movement patterns e.g. having the enemy circle the player, having in zig-zag across the room, having it teleport when the player gets too close etc.
+ - changing the stats of the enemy e.g. more health, faster fire rate, faster bullet speed, faster movement, etc.
+The plan is to simulate each of these variations and assign a score to each trait based on how they impact the hit rate or longevity, and thus the difficulty, of the enemy.
+
+In order to accurately simulate a player I need to know what separates good players from bad ones:
+ - situational awareness: knowing where enemies and bullets are, managing space.
+ - threat analysis: prioritising specific enemies.
+ - accuracy and reaction times
+Situational awareness can be simulated by steering the player away from enemies, bullets, and walls, and towards the point where there are least enemies or bullets.
+Threat analysis can consist of a series of targeting strategies e.g. target least health, target nearest, or target random.
+Accuracy and reaction times can be simulated by adding noise/delay.
+
+Once the simulations have been run and some starting difficulty values have been applied to the enemies I can start designing a genetic algorithm to generate a wave of enemies such that the wave has a certain probability to hit the player x times within its lifetime. after the wave has been defeated the difficulty scores of the enemies will be adjusted according to how they performed: if the player was hit then the enemy responsible would have its difficulty increased and propagated through its traits, and if the player was not hit then the difficulty would be decreased. 
+
+I expect this will yield some nice graphs, such as difficulty per enemy trait and average skill per simulated player. 
+
+To-Do list:
+ - parameterise a single enemy
+ - rudimentary simulation, steer away from bullets, target random enemy
+ - record hit rate and longevity of waves, vary number and traits of enemies
+ - create genetic algorithm to generate waves
+------ June 27th Early Deliverable -------------------
+ - create enemies with different movement and attack patterns
+ - simulate new enemies
+ - improve player simulation, targetting strategies, situational awareness
+ - graph 'skill' of permutations of players, assess accuracy, iterate.
+ 
+This is the plan as it stands, what are your thoughts?
+I have some additional work should this be insufficient, such as adjusting the traits of the player much like those of the enemies and seeing how that impacts the difficulty.
+
+29/5/19
+
+Hangouts should work fine, it'll enable me to screen share and I can still send you progress updates via email to keep me on track. What day/time works best for you?
+
+As far as milestones go:
+parameterising an enemy should be too difficult, I've done most of the work already, I just need to make it so I can instantiate an enemy with a specified fire rate, movement speed, bullet speed, health, attack pattern, and movement pattern. This shouldn't take more than a couple days.
+ 
+Creating a simulated player will likely take more time. I need program the player to move away from nearby bullets and pick an enemy to target. Accuracy and reaction times for this iteration will be 'perfect', which is to say I won't introduce any artificial error. This should be doable within a week, assuming there aren't unforeseen obstacles.
+
+Next will be to create the simulation framework. Unity has a feature where one can change the timescale in order to run the game faster, which should allow me to run many simulations. The plan with the simulations is to sample permutations of enemies and record hit rate and longevity for each enemy. I can then analyse this data to see which parameters contribute to the hit rate and longevity and thus the difficulty. Creating the framework could take a week or 2, I'll need to figure out how best to store the data and I can foresee unforeseen obstacles on this one.
+
+The genetic algorithm shouldn't be too tricky, the fitness function should match a given difficulty while also maximising variance among waves. Difficulty can be taken as HitRate*Longevity. Variance will likely be comparing a candidate wave with the previous n waves by first comparing the number of enemies in a wave and then comparing the individual enemies in each wave, for which i'll need to create a comparator function. From there I just need to set up the crossover and mutation functions and rates. This could take a week or longer.
+
+Having written down the milestones for the first iteration I'm doubtful I'll get it all done by the 27th, especially since im going away to visit family from the 22nd to the 25th. I think doing a background/literature review chapter as a deliverable might be a better option if that will suffice. 
+
+11/6/19
+
+databases
+
+tests: testID(PK), waveID(FK), desc, date
+on startup
+CREATE TABLE TESTS(
+   TEST_ID INT PRIMARY KEY NOT NULL,
+   WAVE_ID INT FOREIGN KEY NOT NULL,
+   DESC TEXT NOT NULL,
+   DATE TEXT NOT NULL
+);
+waves: waveID(PK), enemyIDs 1-6(FKs), time, shotsFired
+on wave end
+CREATE TABLE WAVES(
+   WAVE_ID INT PRIMARY KEY NOT NULL,
+   PLAYER_ID FOREIGN KEY NOT NULL,
+   ENEMY1_ID FOREIGN KEY,
+   ENEMY2_ID FOREIGN KEY,
+   ENEMY3_ID FOREIGN KEY,
+   ENEMY4_ID FOREIGN KEY,
+   ENEMY5_ID FOREIGN KEY,
+   ENEMY6_ID FOREIGN KEY,
+   TIME INT NOT NULL,
+   SHOTS_FIRED INT NOT NULL
+);
+player: playerID, reactionSpeed, accuracy, targetting, movementSpeed, fireRate, shotSpeed
+on wave end
+CREATE TABLE PLAYERS(
+   PLAYER_ID INT PRIMARY KEY NOT NULL,
+   WAVE_ID INT FOREIGN KEY NOT NULL,
+   TARGET_MODE TEXT NOT NULL,
+   REACTION_SPEED REAL NOT NULL,
+   ACCURACY REAL NOT NULL,
+   MOVEMENT_SPEED REAL NOT NULL,
+   FIRE_RATE REAL NOT NULL,
+   SHOT_SPEED REAL NOT NULL
+);
+enemies: enemyID(PK), waveID(FK), health, fireRate, shotSpeed, lifetime, shotsFired
+on death and reset
+CREATE TABLE ENEMIES(
+   ENEMY_ID INT PRIMARY KEY NOT NULL,
+   WAVE_ID INT FOREIGN KEY NOT NULL,
+   HEALTH INT NOT NULL,
+   FIRE_RATE REAL NOT NULL,
+   SHOT_SPEED REAL NOT NULL,
+   SHOTS_FIRED INT NOT NULL,
+   LIFETIME INT NOT NULL
+);
+hits: enemyID(FK),totalShots
+on hit
+CREATE TABLE HITS(
+   ENEMY_ID INT FOREIGN KEY NOT NULL,
+   WAVE_ID INT FOREIGN KEY NOT NULL,
+   SHOTS_ON_SCREEN INT NOT NULL
+);
+
+
+pathing
+incentives: center, least bullets
+deterents: bullets, enemies
+
+1/7/19
+test 51 - static targetting, i-frames
+correlations:
+hits - fireRate, Health, liftime, shotsfired, enemyCount
+
+changes:
+targetting - lowest health, threat analysis?
+graph - lower resolution, fixedUpdate
+shotspeed - unbind, check for correlation
+
+test 55 - shotspeed range 0.01-0.21
+greater correlation between shotSpeed and hits
+weaker correlation between firerate and hits
+
+test 60 - 20-point graph, fixedUpdate
+test 61 - 20-point graph, Update
+test 62 - 20-point graph, Update, 2x speed
+test 63 - 20-point graph, fixedUpdate, 2x speed
+test 64 - 20-point graph, fixedUpdate, 4x speed
+test 65 - 20-point graph, fixedUpdate, 16x speed
+test 66 - 20-point graph, fixedUpdate, 8x speed
+test 67 - 20-point graph, Update, 4x speed
+test 68 - 20-point graph, Update, 8x speed
+test 69 - 20-point graph, Update, 16x speed
+test 70 - 20-point graph, Update, 16x speed, target weakest
+test 71 " shotSpeed 0.01-0.51, fireRate 120-5, health 1-30
+
+
+
+
+
+
+
