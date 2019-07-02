@@ -79,10 +79,10 @@ public class Shooter : MonoBehaviour
 
     public void Randomize()
     {
-        Health = (int)Math.Round((UnityEngine.Random.value + 0.1) * 10);
+        Health = (int)Math.Round((UnityEngine.Random.value) * 29)+1;
         MaxHealth = Health;
-        ShotSpeed = UnityEngine.Random.value / 5 + 0.01f;
-        FireRate = (int)Math.Round(UnityEngine.Random.value * 90) + 30;
+        ShotSpeed = UnityEngine.Random.value / 2 + 0.01f;
+        FireRate = (int)Math.Round(UnityEngine.Random.value * 115) + 5;
         LifeTime = 0;
         ShotsFired = 0;
         Hits = 0;

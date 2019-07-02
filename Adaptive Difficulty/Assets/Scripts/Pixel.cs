@@ -16,6 +16,6 @@ public class Pixel : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        sr.color = val>0? new Color(val, 0, 0): new Color(0,-1*val, 0);
+        sr.color = new Color(val, 0, 0);
     }
 }

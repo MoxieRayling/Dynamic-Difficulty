@@ -50,7 +50,7 @@ public class Room : MonoBehaviour
     {
         updateCount++;
         if(player.Target == null || !player.Target.enabled)
-            player.Target = NearestEnemy();
+            player.Target = WeakestEnemy();
         if (Enemies.FindAll(enemy => enemy.enabled).Capacity == 0)
         {
             Reset();
@@ -63,13 +63,13 @@ public class Room : MonoBehaviour
     public void HitPlayer(Shot s)
     {
         if (player.Invincible) {
-            Debug.Log("Miss");
+            //Debug.Log("Miss");
         }
         else
         {
             Hits++;
             s.Enemy.Hits++;
-            Debug.Log("Hits: " + Hits);
+            //Debug.Log("Hits: " + Hits);
             player.Hit();
         }
     }
@@ -98,6 +98,7 @@ public class Room : MonoBehaviour
         Enemies.ForEach(enemy => enemy.Revive());
         EnemyFactory.GetRandWave(enemies);
         wave++;
+        Debug.Log("Wave: " + wave);
         updateCount = 0;
         shotsFired = 0;
         shotsOnScreen = 0;
@@ -150,10 +151,21 @@ public class Room : MonoBehaviour
     private Shooter NearestEnemy()
     {
         var alive = Enemies.FindAll(enemy => enemy.enabled);
-        if (alive.Capacity > 0)
+        if (alive.Count > 0)
         {
             Vector2 pPos = player.transform.position;
             alive.Sort((e1, e2) => Vector2.Distance(pPos, e1.transform.position).CompareTo(Vector2.Distance(pPos, e2.transform.position)));
+            return alive[0];
+        }
+        return null;
+    }
+
+    private Shooter WeakestEnemy()
+    {
+        var alive = Enemies.FindAll(enemy => enemy.enabled);
+        if (alive.Count > 0)
+        {
+            alive.OrderBy(e => e.MaxHealth);
             return alive[0];
         }
         return null;
