@@ -36,6 +36,7 @@ public class Shooter : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         target = GameObject.FindWithTag("Player").transform;
         sprite = GetComponent<SpriteRenderer>();
+        sprite.enabled = false;
         col = GetComponent<Collider2D>();
     }
 
@@ -79,14 +80,14 @@ public class Shooter : MonoBehaviour
 
     public void Randomize()
     {
-        //Health = (int)Math.Round((UnityEngine.Random.value) * 29)+1;
-        Health = 15;
+        Health = (int)Math.Round((UnityEngine.Random.value) * 29)+1;
+        //Health = 15;
         MaxHealth = Health;
         ShotSpeed = UnityEngine.Random.value / 2 + 0.01f;
         //ShotSpeed = 0.25;
         FireRate = (int)Math.Round(UnityEngine.Random.value * 115) + 5;
-        FireRate = 60;
-        //LifeTime = 0;
+        //FireRate = 60;
+        LifeTime = 0;
         ShotsFired = 0;
         Hits = 0;
     }
@@ -123,7 +124,7 @@ public class Shooter : MonoBehaviour
     {
         enabled = true;
         col.enabled = true;
-        sprite.enabled = true;
+        //sprite.enabled = true;
         Health = 4;
         inactive = false;
     }

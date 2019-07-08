@@ -10,12 +10,13 @@ public class Pixel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        GetComponent<SpriteRenderer>().enabled = false;
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        sr.color = new Color(val, 0, 0);
+        //sr.color = new Color(val, 0, 0);
     }
 }

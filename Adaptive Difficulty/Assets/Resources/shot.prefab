@@ -96,6 +96,8 @@ MonoBehaviour:
   target: 
   vel: 0
   dir: {x: 0, y: 0, z: 0}
+  sr: {fileID: 6412475406630041681}
+  inactive: 0
 --- !u!58 &6555919804417893065
 CircleCollider2D:
   m_ObjectHideFlags: 0

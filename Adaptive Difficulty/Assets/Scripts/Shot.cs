@@ -7,6 +7,7 @@ public class Shot : MonoBehaviour
     public string target;
     public float vel;
     public Vector3 dir;
+    public SpriteRenderer sr;
     public bool inactive = false;
     private Room room;
     private Shooter enemy;
@@ -15,6 +16,7 @@ public class Shot : MonoBehaviour
 
     void Start()
     {
+        sr.enabled = false;
         room.AddShot(this);
         if (target == "Player") room.ShotsOnScreen++;
     }

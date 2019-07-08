@@ -34,6 +34,7 @@ public class Room : MonoBehaviour
 
     void Start()
     {
+        GetComponent<SpriteRenderer>().enabled = false;
         size = gameObject.GetComponent<BoxCollider2D>().size;
         shots = new List<Shot>();
         enemies = new List<Shooter>() { shooter1, shooter2, shooter3, shooter4, shooter5, shooter6 };

@@ -21,7 +21,7 @@ public class EnemyFactory
         Random r = new Random();
         enemies.Sort((x, y) => r.Next(-1, 1));
         int temp = r.Next(1, 148);
-        int limit = 1;
+        int limit = r.Next(1, 7);/*1;
         if (temp <= 60)
             limit = 1;
         else if (temp <= 90)
@@ -34,7 +34,8 @@ public class EnemyFactory
             limit = 5;
         else if (temp <= 147)
             limit = 6;
-        Debug.Log(limit);
+        Debug.Log(limit);*/
+
         for (int i = 0; i < 6; i++)
         {
             if (i < limit)
