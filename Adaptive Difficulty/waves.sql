@@ -1,4 +1,4 @@
-SELECT Hits,ENEMY_COUNT as eCount,
+SELECT WAVE_ID, Hits,ENEMY_COUNT as eCount,
 max([1]) AS FireRate1,max([2]) AS ShotSpeed1,max([3]) AS Health1,
 max([4]) AS FireRate2,max([5]) AS ShotSpeed2,max([6]) AS Health2,
 max([7]) AS FireRate3,max([8]) AS ShotSpeed3,max([9]) AS Health3,
@@ -30,7 +30,7 @@ FROM
               (
                      SELECT w.WAVE_ID,w.HITS as Hits, ENEMY_COUNT,row_number() over (partition by w.WAVE_ID order by ENEMY_ID) AS EnemyWaveID,e.SHOT_SPEED, e.FIRE_RATE, e.HEALTH FROM WAVES w
                      INNER JOIN ENEMIES e ON e.WAVE_ID = w.WAVE_ID AND e.TEST_ID = w.TEST_ID
-					 WHERE e.TEST_ID = 85 --OR e.TEST_ID = 72 --AND e.WAVE_ID < 3000
+					 WHERE e.TEST_ID = 85 AND ENEMY_COUNT = 5
               ) x
 ) y
 GROUP BY WAVE_ID

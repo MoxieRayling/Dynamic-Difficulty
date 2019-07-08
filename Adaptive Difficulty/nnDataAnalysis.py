@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-#from tensorflow.keras.callbacks import TensorBoard
+from tensorflow.keras.callbacks import TensorBoard
 
 NAME = "128x3-relu"
 
@@ -24,7 +24,7 @@ model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))
 model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu)) 
 model.add(tf.keras.layers.Dense(55, activation=tf.nn.softmax))  
 
-tensorboard = tf.keras.callbacks.TensorBoard(log_dir="logs/{}".format(NAME))
+tensorboard = TensorBoard(log_dir="logs/{}".format(NAME))
 model.compile(optimizer='adam', 
               loss='sparse_categorical_crossentropy', 
               metrics=['accuracy'])  
