@@ -13,9 +13,7 @@ public class Player : MonoBehaviour
     private Rigidbody2D rb;
     private CircleCollider2D col;
     private Vector3 change;
-    private bool dash = false;
     private Shooter target;
-    private bool shooting = false;
     private float steering = 0.2f;
     private bool invincible = false;
     private int invincibility = 0;
@@ -88,21 +86,8 @@ public class Player : MonoBehaviour
         }
     }
 
-    IEnumerator Dash()
-    {
-        dash = true;
-        col.enabled = false;
-        Speed = 20;
-        yield return new WaitForSeconds(0.3f);
-        col.enabled = true;
-        Speed = 4;
-        yield return new WaitForSeconds(0.3f);
-        dash = false;
-    }
-
     private void Shoot()
     {
-        shooting = true;
 
         var pos = transform.position;
         var dir = Target.transform.position - pos;
@@ -114,7 +99,6 @@ public class Player : MonoBehaviour
         script.target = "Enemy";
         script.vel = ShotSpeed;
         script.SetRoom(room);
-        shooting = false;
     }
 
     public void SetSteering(double s)

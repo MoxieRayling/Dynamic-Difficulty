@@ -8,7 +8,5 @@ public abstract class Gene
     {
 
     }
-
     public abstract void Mutate();
-    public abstract double Value();
 }

@@ -16,10 +16,13 @@ public abstract class Candidate
 
     public abstract void Mutate(double chance);
 
-    public abstract string ToString();
-
     public Gene GetGene(int i)
     {
         return genes[i];
+    }
+
+    public List<Gene> GetGenes()
+    {
+        return genes;
     }
 }
