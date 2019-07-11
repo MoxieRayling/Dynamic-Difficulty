@@ -12,7 +12,7 @@ public abstract class Candidate
 	}
     public abstract double Fitness();
 
-    public abstract List<Candidate> Crossover(Candidate candidate);
+    public abstract List<Candidate> Crossover(List<Gene> candidate);
 
     public abstract void Mutate(double chance);
 
