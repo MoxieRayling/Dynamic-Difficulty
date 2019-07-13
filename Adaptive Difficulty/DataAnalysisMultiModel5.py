@@ -51,16 +51,16 @@ fr_a, fr_b, fr_c = ans
 #plt.scatter(fr['FIRE_RATE'], fr['hits'], color = 'red')
 #plt.plot(x, rexpModel(x,fr_a,fr_b,fr_c), color = 'green')
 
-def model1(X, a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q):
+def model1(X, a,b,c,d,e,f,g):
     he1,ss1,fr1,he2,ss2,fr2,he3,ss3,fr3,he4,ss4,fr4,he5,ss5,fr5 = X
-    return (a*linModel(he1,he_a,he_b) * b*linModel(ss1*100,ss_a,ss_b) * c*rexpModel(fr1,fr_a,fr_b,fr_c) +
-    d*linModel(he2,he_a,he_b) * e*linModel(ss2*100,ss_a,ss_b) * f*rexpModel(fr2,fr_a,fr_b,fr_c) +
-    g*linModel(he3,he_a,he_b) * h*linModel(ss3*100,ss_a,ss_b) * i*rexpModel(fr3,fr_a,fr_b,fr_c) +
-    j*linModel(he4,he_a,he_b) * k*linModel(ss4*100,ss_a,ss_b) * l*rexpModel(fr4,fr_a,fr_b,fr_c) +
-    m*linModel(he5,he_a,he_b) * n*linModel(ss5*100,ss_a,ss_b) * o*rexpModel(fr5,fr_a,fr_b,fr_c)
-    )*p+q
+    return (a*(linModel(he1,he_a,he_b) + linModel(ss1*100,ss_a,ss_b) + rexpModel(fr1,fr_a,fr_b,fr_c)) +
+    c*(linModel(he2,he_a,he_b) + linModel(ss2*100,ss_a,ss_b) + rexpModel(fr2,fr_a,fr_b,fr_c)) +
+    c*(linModel(he3,he_a,he_b) + linModel(ss3*100,ss_a,ss_b) + rexpModel(fr3,fr_a,fr_b,fr_c)) +
+    d*(linModel(he4,he_a,he_b) + linModel(ss4*100,ss_a,ss_b) + rexpModel(fr4,fr_a,fr_b,fr_c)) +
+    e*(linModel(he5,he_a,he_b) + linModel(ss5*100,ss_a,ss_b) + rexpModel(fr5,fr_a,fr_b,fr_c))
+    )*f+g
 
-init_guess = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]  
+init_guess = [1,1,1,1,1,1,1]  
 fit = curve_fit(model1, 
 (waves['Health1'], waves['ShotSpeed1'], waves['FireRate1'],waves['Health2'], waves['ShotSpeed2'], waves['FireRate2'],waves['Health3'], waves['ShotSpeed3'], waves['FireRate3'],
 waves['Health4'], waves['ShotSpeed4'], waves['FireRate4'], waves['Health5'], waves['ShotSpeed5'], waves['FireRate5']), 
@@ -68,20 +68,23 @@ waves['Hits'],
 p0=init_guess, 
 absolute_sigma=True)
 ans,cov = fit
-fit_a, fit_b, fit_c, fit_d, fit_e, fit_f, fit_g, fit_h, fit_i, fit_j, fit_k, fit_l, fit_m, fit_n, fit_o, fit_p, fit_q= ans
+fit_a, fit_b, fit_c, fit_d, fit_e, fit_f, fit_g = ans
 print(ans)
 predict = np.around(model1((waves['Health1'],waves['ShotSpeed1'],waves['FireRate1'],waves['Health2'], waves['ShotSpeed2'], waves['FireRate2'],waves['Health3'], waves['ShotSpeed3'], waves['FireRate3'],
 waves['Health4'], waves['ShotSpeed4'], waves['FireRate4'], waves['Health5'], waves['ShotSpeed5'], waves['FireRate5']),
-fit_a,fit_b,fit_c,fit_d, fit_e, fit_f, fit_g,fit_h, fit_i, fit_j, fit_k, fit_l, fit_m, fit_n, fit_o, fit_p, fit_q))
+fit_a,fit_b,fit_c,fit_d, fit_e, fit_f, fit_g))
 error = np.absolute(waves['Hits']-predict)
 plt.fill_between(waves['WAVE_ID'],0.5,-0.5)
 plt.scatter(waves['WAVE_ID'],waves['Hits'],color='red')
 plt.scatter(waves['WAVE_ID'],predict,color='green')
 plt.scatter(waves['WAVE_ID'],error,color='blue')
 plt.annotate("average error: " + '%.3f'%(sum(error)/len(error)),(-5,39))
-plt.annotate("correct: " + str(len([e for e in error if e<0.5])),(-5,38.5))
-plt.annotate("incorrect: "+str(len([e for e in error if e>=0.5])),(-5,38))
-plt.annotate("accuracy: "+'%.3f'%(len([e for e in error if e<0.5])/len(error)),(-5,37.5))
+plt.annotate("correct: " + str(len([e for e in error if e<0.5])),(-5,38))
+plt.annotate("incorrect: "+str(len([e for e in error if e>=0.5])),(-5,37))
+plt.annotate("accuracy: "+'%.3f'%(len([e for e in error if e<0.5])/len(error)),(-5,36))
 
+subModel = [he_a,he_b,ss_a,ss_b,fr_a,fr_b,fr_c] 
+print(['%.3f'%e for e in subModel])
+print(['%.3f'%e for e in ans])
 
 plt.show()

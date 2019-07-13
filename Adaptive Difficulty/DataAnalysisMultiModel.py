@@ -50,7 +50,7 @@ fr_a, fr_b, fr_c = ans
 
 def model1(X, a,b,c,d,e):
     he,ss,fr = X
-    return (a*linModel(he,he_a,he_b) * b*logModel(ss*100,ss_a,ss_b,ss_c) * c*rexpModel(fr,fr_a,fr_b,fr_c))*d + e
+    return (linModel(he,he_a,he_b) * b*logModel(ss*100,ss_a,ss_b,ss_c) * c*rexpModel(fr,fr_a,fr_b,fr_c))*d + e
 
 init_guess = [1,1,1,1,1]  
 fit = curve_fit(model1, 
@@ -72,5 +72,8 @@ plt.annotate("correct: " + str(len([e for e in error if e<0.5])),(-5,8.5))
 plt.annotate("incorrect: "+str(len([e for e in error if e>=0.5])),(-5,8))
 plt.annotate("accuracy: "+'%.3f'%(len([e for e in error if e<0.5])/len(error)),(-5,7.5))
 
+subModel = [he_a,he_b,ss_a,ss_b,ss_c,fr_a,fr_b,fr_c] 
+print(['%.3f'%e for e in subModel])
+print(['%.3f'%e for e in ans])
 
 plt.show()

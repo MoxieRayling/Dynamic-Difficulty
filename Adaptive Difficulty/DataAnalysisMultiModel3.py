@@ -51,24 +51,24 @@ fr_a, fr_b, fr_c = ans
 #plt.scatter(fr['FIRE_RATE'], fr['hits'], color = 'red')
 #plt.plot(x, rexpModel(x,fr_a,fr_b,fr_c), color = 'green')
 
-def model1(X, a,b,c,d,e,f,g,h,i,j,k):
+def model1(X, a,b,c,d,e):
     he1,ss1,fr1,he2,ss2,fr2,he3,ss3,fr3 = X
-    return (a*linModel(he1,he_a,he_b) * b*logModel(ss1*100,ss_a,ss_b,ss_c) * c*rexpModel(fr1,fr_a,fr_b,fr_c) +
-    d*linModel(he2,he_a,he_b) * e*logModel(ss2*100,ss_a,ss_b,ss_c) * f*rexpModel(fr2,fr_a,fr_b,fr_c) +
-    g*linModel(he3,he_a,he_b) * h*logModel(ss3*100,ss_a,ss_b,ss_c) * i*rexpModel(fr3,fr_a,fr_b,fr_c)
-    )*j+k
+    return (a*(linModel(he1,he_a,he_b) +logModel(ss1*100,ss_a,ss_b,ss_c) + rexpModel(fr1,fr_a,fr_b,fr_c)) +
+    b*(linModel(he2,he_a,he_b) + logModel(ss2*100,ss_a,ss_b,ss_c) + rexpModel(fr2,fr_a,fr_b,fr_c)) +
+    c*(linModel(he3,he_a,he_b) + logModel(ss3*100,ss_a,ss_b,ss_c) + rexpModel(fr3,fr_a,fr_b,fr_c))
+    )*d+e
 
-init_guess = [1,1,1,1,1,1,1,1,1,1,1]  
+init_guess = [1,1,1,1,1]  
 fit = curve_fit(model1, 
 (waves['Health1'], waves['ShotSpeed1'], waves['FireRate1'],waves['Health2'], waves['ShotSpeed2'], waves['FireRate2'],waves['Health3'], waves['ShotSpeed3'], waves['FireRate3']), 
 waves['Hits'], 
 p0=init_guess, 
 absolute_sigma=True)
 ans,cov = fit
-fit_a, fit_b, fit_c, fit_d, fit_e, fit_f, fit_g, fit_h, fit_i, fit_j, fit_k= ans
+fit_a, fit_b, fit_c, fit_d, fit_e = ans
 print(ans)
 predict = np.around(model1((waves['Health1'],waves['ShotSpeed1'],waves['FireRate1'],waves['Health2'], waves['ShotSpeed2'], waves['FireRate2'],waves['Health3'], waves['ShotSpeed3'], waves['FireRate3']),
-fit_a,fit_b,fit_c,fit_d, fit_e, fit_f, fit_g,fit_h, fit_i, fit_j, fit_k))
+fit_a,fit_b,fit_c,fit_d, fit_e))
 error = np.absolute(waves['Hits']-predict)
 plt.fill_between(waves['WAVE_ID'],0.5,-0.5)
 plt.scatter(waves['WAVE_ID'],waves['Hits'],color='red')
@@ -78,6 +78,10 @@ plt.annotate("average error: " + '%.3f'%(sum(error)/len(error)),(-5,19))
 plt.annotate("correct: " + str(len([e for e in error if e<0.5])),(-5,18.5))
 plt.annotate("incorrect: "+str(len([e for e in error if e>=0.5])),(-5,18))
 plt.annotate("accuracy: "+'%.3f'%(len([e for e in error if e<0.5])/len(error)),(-5,17.5))
+
+subModel = [he_a,he_b,ss_a,ss_b,ss_c,fr_a,fr_b,fr_c] 
+print(['%.3f'%e for e in subModel])
+print(['%.3f'%e for e in ans])
 
 
 plt.show()

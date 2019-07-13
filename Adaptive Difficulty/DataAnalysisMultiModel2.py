@@ -71,10 +71,13 @@ plt.fill_between(waves['WAVE_ID'],0.5,-0.5)
 plt.scatter(waves['WAVE_ID'],waves['Hits'],color='red')
 plt.scatter(waves['WAVE_ID'],predict,color='green')
 plt.scatter(waves['WAVE_ID'],error,color='blue')
-plt.annotate("average error: " + '%.3f'%(sum(error)/len(error)),(-5,9))
-plt.annotate("correct: " + str(len([e for e in error if e<0.5])),(-5,8.5))
-plt.annotate("incorrect: "+str(len([e for e in error if e>=0.5])),(-5,8))
-plt.annotate("accuracy: "+'%.3f'%(len([e for e in error if e<0.5])/len(error)),(-5,7.5))
+plt.annotate("average error: " + '%.3f'%(sum(error)/len(error)),(-5,14))
+plt.annotate("correct: " + str(len([e for e in error if e<0.5])),(-5,13.5))
+plt.annotate("incorrect: "+str(len([e for e in error if e>=0.5])),(-5,13))
+plt.annotate("accuracy: "+'%.3f'%(len([e for e in error if e<0.5])/len(error)),(-5,12.5))
 
+subModel = [he_a,he_b,ss_a,ss_b,ss_c,fr_a,fr_b,fr_c] 
+print(['%.3f'%e for e in subModel])
+print(['%.3f'%e for e in ans])
 
 plt.show()
