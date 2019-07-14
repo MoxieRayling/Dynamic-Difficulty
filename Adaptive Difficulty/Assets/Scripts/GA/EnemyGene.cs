@@ -11,7 +11,7 @@ public class EnemyGene : Gene
     
     public EnemyGene()
     {
-        active = true;
+        active = Random.value < 0.5 ? true : false;
         health = new StatGene(1, 30);
         shotSpeed = new StatGene(1, 50);
         fireRate = new StatGene(5, 120);
@@ -38,5 +38,10 @@ public class EnemyGene : Gene
     public int GetFireRate()
     {
         return fireRate.Value();
+    }
+
+    public bool IsActive()
+    {
+        return active;
     }
 }

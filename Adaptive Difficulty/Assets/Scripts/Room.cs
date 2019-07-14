@@ -20,6 +20,7 @@ public class Room : MonoBehaviour
     private DBManager dbm;
     private int test;
     private int shotsFired = 0;
+    private EnemyFactory ef;
     private int updateCount = 0;
     private List<Shooter> enemies;
     private int wave = 1;
@@ -34,21 +35,26 @@ public class Room : MonoBehaviour
 
     void Start()
     {
-        GetComponent<SpriteRenderer>().enabled = false;
+        //GetComponent<SpriteRenderer>().enabled = false;
         size = gameObject.GetComponent<BoxCollider2D>().size;
         shots = new List<Shot>();
         enemies = new List<Shooter>() { shooter1, shooter2, shooter3, shooter4, shooter5, shooter6 };
-        EnemyFactory.GetRandWave(enemies);
+        ef = new EnemyFactory();
+        ef.GetRandWave(enemies);
         player.Target = NearestEnemy();
         dbm = new DBManager();
         test = dbm.TestCount()+1;
         Debug.Log("Test " + test);
         dbm.InsertPlayer(player, wave, test);
-        dbm.InsertTest(test, "setup");
+        dbm.InsertTest(test, "GA Test");
     }
 
     void FixedUpdate()
     {
+        if (!ef.RunningGA)
+        {
+            StartCoroutine(ef.RunGA());
+        }
         updateCount++;
         if(player.Target == null || !player.Target.enabled)
             player.Target = WeakestEnemy();
@@ -97,7 +103,8 @@ public class Room : MonoBehaviour
         shots.ForEach(s => Destroy(s.gameObject));
         shots.Clear();
         Enemies.ForEach(enemy => enemy.Revive());
-        EnemyFactory.GetRandWave(enemies);
+        ef.RunningGA = false;
+        ef.GetBestWave(enemies);
         wave++;
         Debug.Log("Wave: " + wave);
         updateCount = 0;

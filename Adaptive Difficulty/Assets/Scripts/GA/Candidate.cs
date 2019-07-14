@@ -5,12 +5,13 @@ using System.Collections.Generic;
 public abstract class Candidate
 {
     protected List<Gene> genes;
+    protected double fitness = 0;
 
-	public Candidate()
+    public Candidate()
 	{
 
 	}
-    public abstract double Fitness();
+    public abstract void Fitness();
 
     public abstract List<Candidate> Crossover(List<Gene> candidate);
 

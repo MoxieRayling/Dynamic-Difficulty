@@ -36,7 +36,7 @@ public class Shooter : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         target = GameObject.FindWithTag("Player").transform;
         sprite = GetComponent<SpriteRenderer>();
-        sprite.enabled = false;
+        //sprite.enabled = false;
         col = GetComponent<Collider2D>();
     }
 

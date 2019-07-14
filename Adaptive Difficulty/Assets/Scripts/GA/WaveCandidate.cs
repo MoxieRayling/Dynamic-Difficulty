@@ -23,9 +23,11 @@ public class WaveCandidate : Candidate
     private double[] subFit6 = { 0.896, 0.958, 0.720, 0.040, 2.001, 0.010, 6.870, -0.755 };
     private double[] fit6 = { 0.867, 0.843, 0.753, 0.732, 0.634, 0.532, 0.276, -6.928 };
 
+    public double FitScore { get => fitness; set => fitness = value; }
 
     public WaveCandidate()
     {
+        genes = new List<Gene>();
         for (int i = 0; i < 6; i++) {
             genes.Add(new EnemyGene());
         }
@@ -60,10 +62,10 @@ public class WaveCandidate : Candidate
         return result;
     }
 
-    public override double Fitness()
+    public override void Fitness()
     {
         double result = 0;
-        switch (genes.Count)
+        switch (genes.FindAll(g => ((EnemyGene)g).IsActive()).Count)
         {
             case 1:
                 result = Model1();
@@ -88,14 +90,14 @@ public class WaveCandidate : Candidate
         }
         result *= CompareWaves(new List<WaveData>());
         
-        return result;
+        FitScore = result;
     }
 
     public override void Mutate(double chance)
     {
         foreach (Gene g in genes)
         {
-            if (Random.value > 1 / 6)
+            if (Random.value > chance)
             {
                 g.Mutate();
             }
@@ -155,12 +157,12 @@ public class WaveCandidate : Candidate
     private double Model1()
     {
         double result = 0;
-        int[] stats = GenesToStats();
+        int[,] stats = GenesToStats();
 
         result = (
-        fit1[0] * LinModel(stats[0], subFit1[0], subFit1[1]) *
-        fit1[1] * LogModel(stats[1], subFit1[2], subFit1[3], subFit1[4]) *
-        fit1[2] * RexpModel(stats[2], subFit1[5], subFit1[6], subFit1[7])
+        fit1[0] * LinModel(stats[0,0], subFit1[0], subFit1[1]) *
+        fit1[1] * LogModel(stats[0,1], subFit1[2], subFit1[3], subFit1[4]) *
+        fit1[2] * RexpModel(stats[0,2], subFit1[5], subFit1[6], subFit1[7])
         ) * fit1[3] + fit1[4];
         
         return fit1[fit1.Length - 2] * result + fit1[fit1.Length - 1];
@@ -169,16 +171,16 @@ public class WaveCandidate : Candidate
     private double Model2()
     {
         double result = 0;
-        int[] stats = GenesToStats();
+        int[,] stats = GenesToStats();
 
         result = (
-        fit2[0] * LinModel(stats[0], subFit2[1], subFit2[1]) *
-        fit2[1] * LogModel(stats[1], subFit2[2], subFit2[3], subFit2[4]) *
-        fit2[2] * RexpModel(stats[2], subFit2[5], subFit2[6], subFit2[7]) + 
+        fit2[0] * LinModel(stats[0,0], subFit2[0], subFit2[1]) *
+        fit2[1] * LogModel(stats[0,1], subFit2[2], subFit2[3], subFit2[4]) *
+        fit2[2] * RexpModel(stats[0,2], subFit2[5], subFit2[6], subFit2[7]) + 
 
-        fit2[3] * LinModel(stats[0], subFit2[1], subFit2[1]) *
-        fit2[4] * LogModel(stats[1], subFit2[2], subFit2[3], subFit2[4]) *
-        fit2[5] * RexpModel(stats[2], subFit2[5], subFit2[6], subFit2[7])
+        fit2[3] * LinModel(stats[1,0], subFit2[1], subFit2[1]) *
+        fit2[4] * LogModel(stats[1,1], subFit2[2], subFit2[3], subFit2[4]) *
+        fit2[5] * RexpModel(stats[1,2], subFit2[5], subFit2[6], subFit2[7])
 
         ) * fit2[6] + fit2[7] ;
         
@@ -188,13 +190,13 @@ public class WaveCandidate : Candidate
     private double Model3()
     {
         double result = 0;
-        int[] stats = GenesToStats();
+        int[,] stats = GenesToStats();
         for (int i = 0; i < 3; i++)
         {
             result += fit3[i] * (
-                LinModel(stats[i * 3], subFit3[i * 8], subFit3[i * 8 + 1]) +
-                LogModel(stats[i * 3 + 1], subFit3[i * 8 + 2], subFit3[i * 8 + 3], subFit3[i * 8 + 4]) +
-                RexpModel(stats[i * 3 + 2], subFit3[i * 8 + 5], subFit3[i * 8 + 6], subFit3[i * 8 + 7]));
+                LinModel(stats[i,0], subFit3[0], subFit3[1]) +
+                LogModel(stats[i,1], subFit3[2], subFit3[3], subFit3[4]) +
+                RexpModel(stats[i,2], subFit3[5], subFit3[6], subFit3[7]));
         }
         return fit3[fit3.Length - 2] * result + fit3[fit3.Length - 1];
     }
@@ -202,13 +204,13 @@ public class WaveCandidate : Candidate
     private double Model4()
     {
         double result = 0;
-        int[] stats = GenesToStats();
+        int[,] stats = GenesToStats();
         for (int i = 0; i < 4; i++)
         {
             result += fit4[i] * (
-                LinModel(stats[i * 3], subFit4[i * 7], subFit4[i * 7 + 1]) +
-                LinModel(stats[i * 3 + 1], subFit4[i * 7 + 2], subFit4[i * 7 + 3]) +
-                RexpModel(stats[i * 3 + 2], subFit4[i * 7 + 4], subFit4[i * 7 + 5], subFit4[i * 7 + 6]));
+                LinModel(stats[i,0], subFit4[0], subFit4[1]) +
+                LinModel(stats[i,1], subFit4[2], subFit4[3]) +
+                RexpModel(stats[i,2], subFit4[4], subFit4[5], subFit4[6]));
         }
         return fit4[fit4.Length - 2] * result + fit4[fit4.Length - 1];
     }
@@ -216,13 +218,13 @@ public class WaveCandidate : Candidate
     private double Model5()
     {
         double result = 0;
-        int[] stats = GenesToStats();
+        int[,] stats = GenesToStats();
         for (int i = 0; i < 5; i++)
         {
             result += fit5[i] * (
-                LinModel(stats[i * 3], subFit5[i * 7], subFit5[i * 7 + 1]) +
-                LinModel(stats[i * 3 + 1], subFit5[i * 7 + 2], subFit5[i * 7 + 3]) +
-                RexpModel(stats[i * 3 + 2], subFit5[i * 7 + 4], subFit5[i * 7 + 5], subFit5[i * 7 + 6]));
+                LinModel(stats[i,0], subFit5[0], subFit5[1]) +
+                LinModel(stats[i,1], subFit5[2], subFit5[3]) +
+                RexpModel(stats[i,2], subFit5[4], subFit5[5], subFit5[6]));
         }
         return fit5[fit5.Length - 2] * result + fit5[fit5.Length - 1];
     }
@@ -230,25 +232,27 @@ public class WaveCandidate : Candidate
     private double Model6()
     {
         double result = 0;
-        int[] stats = GenesToStats();
+        int[,] stats = GenesToStats();
         for (int i = 0; i < 6; i++)
         {
-            result += fit6[i] * (
-                LinModel(stats[i * 3], subFit6[i * 7], subFit6[i * 7 + 1]) +
-                LinModel(stats[i * 3 + 1], subFit6[i * 7 + 2], subFit6[i * 7 + 3]) +
-                RexpModel(stats[i * 3 + 2], subFit6[i * 7 + 4], subFit6[i * 7 + 5], subFit6[i * 7 + 6]));
+            result += 
+                fit6[i] * (
+                LinModel(stats[i,0], subFit6[0], subFit6[1]) +
+                LinModel(stats[i,1], subFit6[2], subFit6[3]) +
+                RexpModel(stats[i,2], subFit6[4], subFit6[5], subFit6[6]));
         }
         return fit6[fit6.Length - 2] * result + fit6[fit6.Length - 1];
     }
 
-    private int[] GenesToStats()
+    private int[,] GenesToStats()
     {
-        int[] stats = new int[genes.Count];
-        for(int i = 0; i < genes.Count; i++)
+        var activeGenes = genes.FindAll(g => ((EnemyGene)g).IsActive());
+        int[,] stats = new int[activeGenes.Count,3];
+        for(int i = 0; i < activeGenes.Count; i++)
         {
-            stats[i * 3] = ((EnemyGene)genes[i]).GetHealth();
-            stats[i * 3 + 1] = ((EnemyGene)genes[i]).GetShotSpeed();
-            stats[i * 3 + 2] = ((EnemyGene)genes[i]).GetFireRate();
+            stats[i,0] = ((EnemyGene)genes[i]).GetHealth();
+            stats[i,1] = ((EnemyGene)genes[i]).GetShotSpeed();
+            stats[i,2] = ((EnemyGene)genes[i]).GetFireRate();
         }
         return stats;
     }
