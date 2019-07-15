@@ -14,6 +14,7 @@ public class Room : MonoBehaviour
     public Shooter shooter6;
     public Player player;
     public Graph graph;
+    public WaveGA ga;
     private Vector2 size;
     private List<Shot> shots;
     private bool busy;
@@ -51,10 +52,6 @@ public class Room : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!ef.RunningGA)
-        {
-            StartCoroutine(ef.RunGA());
-        }
         updateCount++;
         if(player.Target == null || !player.Target.enabled)
             player.Target = WeakestEnemy();
@@ -103,10 +100,11 @@ public class Room : MonoBehaviour
         shots.ForEach(s => Destroy(s.gameObject));
         shots.Clear();
         Enemies.ForEach(enemy => enemy.Revive());
-        ef.RunningGA = false;
-        ef.GetBestWave(enemies);
+        Debug.Log("Best: " + ga.Best.FitScore + ", " + ga.Best.ToString());
+        ef.GetBestWave(enemies,ga.Best.GetGenes());
         wave++;
-        Debug.Log("Wave: " + wave);
+
+        Debug.Log("Hits: "+ hits + Environment.NewLine +"Wave: " + wave);
         updateCount = 0;
         shotsFired = 0;
         shotsOnScreen = 0;

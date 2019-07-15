@@ -7,24 +7,9 @@ using Random = System.Random;
 
 public class EnemyFactory
 {
-    private WaveGA ga;
-    private bool runningGA = false;
-
-    public bool RunningGA { get => runningGA; set => runningGA = value; }
-
     public EnemyFactory()
     {
-        ga = new WaveGA(50);
-    }
 
-    public IEnumerator RunGA()
-    {
-        RunningGA = true;
-        while (RunningGA)
-        {
-            ga.NextGen();
-        }
-        yield return null;
     }
 
     public void Setup(Shooter shooter)
@@ -71,15 +56,20 @@ public class EnemyFactory
         }
     }
 
-    public void GetBestWave(List<Shooter> enemies)
+    public void GetBestWave(List<Shooter> enemies, List<Gene> best)
     {
-        var best = ga.Best.GetGenes();
         for(int i = 0; i < 6; i++)
         {
-            enemies[0].enabled = ((EnemyGene)best[0]).IsActive();
-            enemies[0].Health = ((EnemyGene)best[0]).GetHealth();
-            enemies[0].ShotSpeed = ((EnemyGene)best[0]).GetShotSpeed();
-            enemies[0].FireRate = ((EnemyGene)best[0]).GetFireRate();
+            enemies[i].Id = i + 1;
+            if (((EnemyGene)best[i]).IsActive()) enemies[i].Revive();
+            else
+            {
+                enemies[i].SetInactive();
+                enemies[i].Id = 0;
+            }
+            enemies[i].Health = ((EnemyGene)best[i]).GetHealth();
+            enemies[i].ShotSpeed = ((EnemyGene)best[i]).GetShotSpeed();
+            enemies[i].FireRate = ((EnemyGene)best[i]).GetFireRate();
         }
     }
 }

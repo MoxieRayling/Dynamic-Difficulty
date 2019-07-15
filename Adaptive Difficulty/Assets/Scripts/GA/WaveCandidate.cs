@@ -56,6 +56,7 @@ public class WaveCandidate : Candidate
                 genes1.Add(candidate[i]);
             }
         }
+
         result.Add(new WaveCandidate(genes1));
         result.Add(new WaveCandidate(genes2));
 
@@ -88,7 +89,7 @@ public class WaveCandidate : Candidate
             default:
                 break;
         }
-        result *= CompareWaves(new List<WaveData>());
+        //result *= CompareWaves(new List<WaveData>());
         
         FitScore = result;
     }
@@ -244,7 +245,7 @@ public class WaveCandidate : Candidate
         return fit6[fit6.Length - 2] * result + fit6[fit6.Length - 1];
     }
 
-    private int[,] GenesToStats()
+    public int[,] GenesToStats()
     {
         var activeGenes = genes.FindAll(g => ((EnemyGene)g).IsActive());
         int[,] stats = new int[activeGenes.Count,3];
@@ -255,5 +256,18 @@ public class WaveCandidate : Candidate
             stats[i,2] = ((EnemyGene)genes[i]).GetFireRate();
         }
         return stats;
+    }
+
+    public override string ToString()
+    {
+        string result = "";
+        int[,] stats = GenesToStats();
+        for(int i = 0; i < stats.GetLength(0); i++)
+        {
+            for (int j = 0; j < stats.GetLength(1); j++) {
+                result += stats[i, j] + ", ";
+            }
+        }
+        return result;
     }
 }

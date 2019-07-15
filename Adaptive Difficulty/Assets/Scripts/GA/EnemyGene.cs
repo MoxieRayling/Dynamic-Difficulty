@@ -19,7 +19,7 @@ public class EnemyGene : Gene
 
     public override void Mutate()
     {
-        if(Random.value < 0.5) active = !active;
+        if(Random.value < 0.1) active = !active;
         if (Random.value < 0.1) health.Mutate();
         if (Random.value < 0.1) shotSpeed.Mutate();
         if (Random.value < 0.1) fireRate.Mutate();

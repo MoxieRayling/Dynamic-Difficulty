@@ -124,7 +124,7 @@ public class Shooter : MonoBehaviour
     {
         enabled = true;
         col.enabled = true;
-        //sprite.enabled = true;
+        sprite.enabled = true;
         Health = 4;
         inactive = false;
     }

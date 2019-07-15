@@ -600,6 +600,50 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e13c6a6fd47414f4bb007767bb54c3a5, type: 3}
+--- !u!1 &1151281239
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1151281241}
+  - component: {fileID: 1151281240}
+  m_Layer: 0
+  m_Name: GA
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1151281240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1151281239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93d38a4dac2333645a9a4fa1ed0ade6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  population: 50
+--- !u!4 &1151281241
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1151281239}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.1371429, y: -0.3566459, z: 0.17858736}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1380138025 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6817694589092981777, guid: 056a785ce9e600d43840755e69407f49,
@@ -996,6 +1040,11 @@ PrefabInstance:
       propertyPath: graph
       value: 
       objectReference: {fileID: 1380138025}
+    - target: {fileID: 6463931834182320844, guid: c2b0c025fd70fc44db00e53bc3f28d3a,
+        type: 3}
+      propertyPath: ga
+      value: 
+      objectReference: {fileID: 1151281240}
     - target: {fileID: 6463931834182320846, guid: c2b0c025fd70fc44db00e53bc3f28d3a,
         type: 3}
       propertyPath: m_LocalPosition.x

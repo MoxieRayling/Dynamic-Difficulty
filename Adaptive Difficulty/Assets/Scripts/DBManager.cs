@@ -13,7 +13,7 @@ public class DBManager
 
     public DBManager()
     {
-        connection = "URI=file:" +  "C:/UserS/Simurgh/Documents/GitHub/Dynamic-Difficulty/Adaptive Difficulty/" + "My_Database.db";
+        connection = "URI=file:" +  "C:/UserS/Simurgh/Documents/GitHub/Dynamic-Difficulty/Adaptive Difficulty/" + "GA_Database.db";
         dbcon = new SqliteConnection(connection);
         dbcon.Open();
         CreateTests();
@@ -124,13 +124,21 @@ public class DBManager
 
     public void InsertEnemy(Shooter s, int wave, int test)
     {
-        IDbCommand dbcmd = dbcon.CreateCommand();
-        IDataReader reader;
+        try
+        {
+            IDbCommand dbcmd = dbcon.CreateCommand();
+            IDataReader reader;
 
-        dbcmd.CommandText =
-          " INSERT INTO ENEMIES (ENEMY_ID, WAVE_ID, TEST_ID, HEALTH , FIRE_RATE, SHOT_SPEED, SHOTS_FIRED, LIFETIME, HITS)" +
-          " VALUES (" + s.Id + ", " + wave + ", " + test + ", " + s.MaxHealth + ", " + s.FireRate + ", " + s.ShotSpeed + ", " + s.ShotsFired + ", " + s.LifeTime + ", " + s.Hits + " );";
-        reader = dbcmd.ExecuteReader();
+            dbcmd.CommandText =
+              " INSERT INTO ENEMIES (ENEMY_ID, WAVE_ID, TEST_ID, HEALTH , FIRE_RATE, SHOT_SPEED, SHOTS_FIRED, LIFETIME, HITS)" +
+              " VALUES (" + s.Id + ", " + wave + ", " + test + ", " + s.MaxHealth + ", " + s.FireRate + ", " + s.ShotSpeed + ", " + s.ShotsFired + ", " + s.LifeTime + ", " + s.Hits + " );";
+            reader = dbcmd.ExecuteReader();
+            Debug.Log("SUCCESS: Enemy " + s.Id + ", Wave " + wave + ", Test " + test);
+        }
+        catch (SqliteException e)
+        {
+            Debug.Log("FAILED: Enemy " + s.Id + ", Wave " + wave + ", Test " + test);
+        }
     }
 
     public void InsertHit(int enemy, int wave, int test, int shots)
