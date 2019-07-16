@@ -13,7 +13,7 @@ public class DBManager
 
     public DBManager()
     {
-        connection = "URI=file:" +  "C:/UserS/Simurgh/Documents/GitHub/Dynamic-Difficulty/Adaptive Difficulty/" + "GA_Database.db";
+        connection = "URI=file:" +  "C:/UserS/Simurgh/Documents/GitHub/Dynamic-Difficulty/Adaptive Difficulty/" + "My_Database.db";
         dbcon = new SqliteConnection(connection);
         dbcon.Open();
         CreateTests();

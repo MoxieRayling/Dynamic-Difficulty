@@ -16,7 +16,7 @@ public class Shot : MonoBehaviour
 
     void Start()
     {
-        sr.enabled = false;
+        //sr.enabled = false;
         room.AddShot(this);
         if (target == "Player") room.ShotsOnScreen++;
     }

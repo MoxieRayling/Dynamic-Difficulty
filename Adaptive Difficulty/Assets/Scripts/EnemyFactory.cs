@@ -7,6 +7,7 @@ using Random = System.Random;
 
 public class EnemyFactory
 {
+    private int count = 1;
     public EnemyFactory()
     {
 
@@ -25,21 +26,19 @@ public class EnemyFactory
     {
         Random r = new Random();
         enemies.Sort((x, y) => r.Next(-1, 1));
-        int temp = r.Next(1, 148);
-        int limit = r.Next(1, 7);/*1;
-        if (temp <= 60)
+        int limit = 1;
+        if (count <= 60)
             limit = 1;
-        else if (temp <= 90)
+        else if (count <= 90)
             limit = 2;
-        else if (temp <= 110)
+        else if (count <= 110)
             limit = 3;
-        else if (temp <= 125)
+        else if (count <= 125)
             limit = 4;
-        else if (temp <= 137)
+        else if (count <= 137)
             limit = 5;
-        else if (temp <= 147)
+        else if (count <= 147)
             limit = 6;
-        Debug.Log(limit);*/
 
         for (int i = 0; i < 6; i++)
         {
@@ -54,6 +53,8 @@ public class EnemyFactory
                 enemies[i].Id = 0;
             }
         }
+        count++;
+        if (count > 147) count = 1;
     }
 
     public void GetBestWave(List<Shooter> enemies, List<Gene> best)
