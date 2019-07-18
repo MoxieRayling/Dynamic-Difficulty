@@ -13,7 +13,7 @@ public class EnemyGene : Gene
     {
         active = Random.value < 0.5 ? true : false;
         health = new StatGene(1, 30);
-        shotSpeed = new StatGene(1, 50);
+        shotSpeed = new StatGene(10, 50);
         fireRate = new StatGene(5, 120);
     }
 

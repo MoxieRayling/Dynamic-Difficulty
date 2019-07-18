@@ -3,10 +3,10 @@ from scipy.optimize import curve_fit
 import pandas as pd
 import matplotlib.pyplot as plt
 
-he = pd.read_csv("C:/Users/Simurgh/Documents/GitHub/Dynamic-Difficulty/Adaptive Difficulty/health 6.csv")
-ss = pd.read_csv("C:/Users/Simurgh/Documents/GitHub/Dynamic-Difficulty/Adaptive Difficulty/shotspeed 6.csv")
-fr = pd.read_csv("C:/Users/Simurgh/Documents/GitHub/Dynamic-Difficulty/Adaptive Difficulty/firerate 6.csv")
-waves = pd.read_csv("C:/Users/Simurgh/Documents/GitHub/Dynamic-Difficulty/Adaptive Difficulty/waves 6.csv")
+he = pd.read_csv("C:/Users/Simurgh/Documents/GitHub/Dynamic-Difficulty/Adaptive Difficulty/16x model/health 6.csv")
+ss = pd.read_csv("C:/Users/Simurgh/Documents/GitHub/Dynamic-Difficulty/Adaptive Difficulty/16x model/shotspeed 6.csv")
+fr = pd.read_csv("C:/Users/Simurgh/Documents/GitHub/Dynamic-Difficulty/Adaptive Difficulty/16x model/firerate 6.csv")
+waves = pd.read_csv("C:/Users/Simurgh/Documents/GitHub/Dynamic-Difficulty/Adaptive Difficulty/16x model/waves 6.csv")
 
 
 def linModel(x,a,b):
@@ -38,9 +38,9 @@ init_guess = [1,1]
 fit = curve_fit(linModel, ss['SSBounds'], ss['hits'], p0=init_guess, absolute_sigma=True)
 ans,cov = fit
 ss_a, ss_b = ans
-x = np.linspace(0,51)
-plt.scatter(ss['SSBounds'], ss['hits'], color = 'red')
-plt.plot(x, linModel(x,ss_a,ss_b), color = 'green')
+#x = np.linspace(0,51)
+#plt.scatter(ss['SSBounds'], ss['hits'], color = 'red')
+#plt.plot(x, linModel(x,ss_a,ss_b), color = 'green')
 
 init_guess = [1,1,1]  
 
@@ -74,7 +74,7 @@ predict = np.around(model1((waves['Health1'],waves['ShotSpeed1'],waves['FireRate
 waves['Health4'], waves['ShotSpeed4'], waves['FireRate4'], waves['Health5'], waves['ShotSpeed5'], waves['FireRate5'], waves['Health6'], waves['ShotSpeed6'], waves['FireRate6']),
 fit_a,fit_b,fit_c,fit_d, fit_e, fit_f, fit_g,fit_h))
 error = np.absolute(waves['Hits']-predict)
-plt.fill_between(waves['WAVE_ID'],0.5,-0.5)
+#plt.fill_between(waves['WAVE_ID'],0.5,-0.5)
 plt.scatter(waves['WAVE_ID'],waves['Hits'],color='red')
 plt.scatter(waves['WAVE_ID'],predict,color='green')
 #plt.scatter(waves['WAVE_ID'],error,color='blue')

@@ -26,18 +26,18 @@ init_guess = [1,1]
 fit = curve_fit(linModel, he['HEALTH'], he['hits'], p0=init_guess, absolute_sigma=True)
 ans,cov = fit
 he_a, he_b = ans
-#x = np.linspace(0,30)
-#plt.plot(he['HEALTH'], he['hits'], color = 'red')
-#plt.plot(x, linModel(x,he_a,he_b), color = 'green')
+x = np.linspace(0,30)
+plt.scatter(he['HEALTH'], he['hits'], color = 'red')
+plt.plot(x, linModel(x,he_a,he_b), color = 'green')
 
-init_guess = [1,1,1]  
+init_guess = [1,1]  
 
-fit = curve_fit(logModel, ss['SSBounds'], ss['hits'], p0=init_guess, absolute_sigma=True)
+fit = curve_fit(linModel, ss['SSBounds'], ss['hits'], p0=init_guess, absolute_sigma=True)
 ans,cov = fit
-ss_a, ss_b, ss_c = ans
+ss_a, ss_b = ans
 #x = np.linspace(0,51)
-#plt.plot(ss['SSBounds'], ss['hits'], color = 'red')
-#plt.plot(x, logModel(x,ss_a,ss_b,ss_c), color = 'green')
+#plt.scatter(ss['SSBounds'], ss['hits'], color = 'red')
+#plt.plot(x, linModel(x,ss_a,ss_b), color = 'green')
 
 init_guess = [1,1,1]  
 
@@ -45,9 +45,9 @@ fit = curve_fit(rexpModel, fr['FIRE_RATE'], fr['hits'], p0=init_guess, absolute_
 ans,cov = fit
 fr_a, fr_b, fr_c = ans
 #x = np.linspace(5,120)
-#plt.plot(fr['FIRE_RATE'], fr['hits'], color = 'red')
+#plt.scatter(fr['FIRE_RATE'], fr['hits'], color = 'red')
 #plt.plot(x, rexpModel(x,fr_a,fr_b,fr_c), color = 'green')
-
+'''
 def model1(X, a,b,c,d,e):
     he,ss,fr = X
     return (linModel(he,he_a,he_b) * b*logModel(ss*100,ss_a,ss_b,ss_c) * c*rexpModel(fr,fr_a,fr_b,fr_c))*d + e
@@ -75,5 +75,5 @@ plt.annotate("accuracy: "+'%.3f'%(len([e for e in error if e<0.5])/len(error)),(
 subModel = [he_a,he_b,ss_a,ss_b,ss_c,fr_a,fr_b,fr_c] 
 print(['%.3f'%e for e in subModel])
 print(['%.3f'%e for e in ans])
-
+'''
 plt.show()

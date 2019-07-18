@@ -47,10 +47,10 @@ init_guess = [1,1,1]
 fit = curve_fit(rexpModel, fr['FIRE_RATE'], fr['hits'], p0=init_guess, absolute_sigma=True)
 ans,cov = fit
 fr_a, fr_b, fr_c = ans
-#x = np.linspace(5,120)
-#plt.scatter(fr['FIRE_RATE'], fr['hits'], color = 'red')
-#plt.plot(x, rexpModel(x,fr_a,fr_b,fr_c), color = 'green')
-
+x = np.linspace(5,120)
+plt.scatter(fr['FIRE_RATE'], fr['hits'], color = 'red')
+plt.plot(x, rexpModel(x,fr_a,fr_b,fr_c), color = 'green')
+'''
 def model1(X, a,b,c,d,e,f,g,h):
     he1,ss1,fr1,he2,ss2,fr2,he3,ss3,fr3,he4,ss4,fr4,he5,ss5,fr5,he6,ss6,fr6 = X
     return (a*(linModel(he1,he_a,he_b) + linModel(ss1*100,ss_a,ss_b) + rexpModel(fr1,fr_a,fr_b,fr_c)) +
@@ -85,5 +85,5 @@ plt.annotate("accuracy: "+'%.3f'%(len([e for e in error if e<0.5])/len(error)),(
 subModel = [he_a,he_b,he_c,ss_a,ss_b,fr_a,fr_b,fr_c] 
 print(['%.3f'%e for e in subModel])
 print(['%.3f'%e for e in ans])
-
+'''
 plt.show()

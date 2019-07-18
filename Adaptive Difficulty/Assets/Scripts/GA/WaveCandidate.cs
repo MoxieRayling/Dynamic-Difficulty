@@ -65,6 +65,7 @@ public class WaveCandidate : Candidate
 
     public override void Fitness()
     {
+        double target = 1;
         double result = 0;
         switch (genes.FindAll(g => ((EnemyGene)g).IsActive()).Count)
         {
@@ -89,7 +90,9 @@ public class WaveCandidate : Candidate
             default:
                 break;
         }
-        result = Mathf.Abs(1 -(float) result);
+        if(result == target) FitScore = 1;
+        
+        else result = 1/Mathf.Abs(1 - (float) result);
         //result *= CompareWaves(new List<WaveData>());
         
         FitScore = result;

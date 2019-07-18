@@ -62,14 +62,17 @@ public class EnemyFactory
         for(int i = 0; i < 6; i++)
         {
             enemies[i].Id = i + 1;
-            if (((EnemyGene)best[i]).IsActive()) enemies[i].Revive();
+            if (((EnemyGene)best[i]).IsActive()) {
+                enemies[i].Revive();
+                enemies[i].Id = i;
+            }
             else
             {
                 enemies[i].SetInactive();
                 enemies[i].Id = 0;
             }
             enemies[i].Health = ((EnemyGene)best[i]).GetHealth();
-            enemies[i].ShotSpeed = ((EnemyGene)best[i]).GetShotSpeed();
+            enemies[i].ShotSpeed = (float)((EnemyGene)best[i]).GetShotSpeed()/100;
             enemies[i].FireRate = ((EnemyGene)best[i]).GetFireRate();
         }
 
