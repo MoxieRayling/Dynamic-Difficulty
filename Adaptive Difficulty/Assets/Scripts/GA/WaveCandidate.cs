@@ -89,6 +89,7 @@ public class WaveCandidate : Candidate
             default:
                 break;
         }
+        result = Mathf.Abs(1 -(float) result);
         //result *= CompareWaves(new List<WaveData>());
         
         FitScore = result;

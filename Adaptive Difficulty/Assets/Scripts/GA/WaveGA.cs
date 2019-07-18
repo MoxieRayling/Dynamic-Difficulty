@@ -9,7 +9,9 @@ public class WaveGA : MonoBehaviour
     private int gen = 0;
     public int population;
     private WaveCandidate best;
+    private bool restart = false;
     public WaveCandidate Best { get => best; set => best = value; }
+    public bool Restart { get => restart; set => restart = value; }
 
     private void Start()
     {
@@ -22,6 +24,8 @@ public class WaveGA : MonoBehaviour
 
     private void Update()
     {
+        if (restart) NewGA();
+        
         NextGen();
     }
 
@@ -29,6 +33,7 @@ public class WaveGA : MonoBehaviour
     {
         gen++;
         cands.OrderBy(c => c.FitScore);
+        cands.Reverse();
         
         var nextGen = new List<WaveCandidate>();
         for(int i = 0; i < population/2; i++)
@@ -48,5 +53,15 @@ public class WaveGA : MonoBehaviour
         cands.OrderBy(c => c.FitScore);
         if (Best == null || Best.FitScore < cands[0].FitScore) Best = cands[0];
         
+    }
+    public void NewGA()
+    {
+        cands = new List<WaveCandidate>();
+        for (int i = 0; i < population - 1; i++)
+        {
+            cands.Add(new WaveCandidate());
+        }
+        Best = null;
+        restart = false;
     }
 }

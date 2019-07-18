@@ -73,10 +73,10 @@ predict = np.around(model1((waves['Health1'],waves['ShotSpeed1'],waves['FireRate
 waves['Health4'], waves['ShotSpeed4'], waves['FireRate4']),
 fit_a,fit_b,fit_c,fit_d, fit_e, fit_f))
 error = np.absolute(waves['Hits']-predict)
-plt.fill_between(waves['WAVE_ID'],0.5,-0.5)
+#plt.fill_between(waves['WAVE_ID'],0.5,-0.5)
 plt.scatter(waves['WAVE_ID'],waves['Hits'],color='red')
 plt.scatter(waves['WAVE_ID'],predict,color='green')
-plt.scatter(waves['WAVE_ID'],error,color='blue')
+#plt.scatter(waves['WAVE_ID'],error,color='blue')
 plt.annotate("average error: " + '%.3f'%(sum(error)/len(error)),(-5,29))
 plt.annotate("correct: " + str(len([e for e in error if e<0.5])),(-5,28.5))
 plt.annotate("incorrect: "+str(len([e for e in error if e>=0.5])),(-5,28))

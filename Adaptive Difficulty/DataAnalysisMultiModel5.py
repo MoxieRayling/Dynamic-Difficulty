@@ -74,14 +74,14 @@ predict = np.around(model1((waves['Health1'],waves['ShotSpeed1'],waves['FireRate
 waves['Health4'], waves['ShotSpeed4'], waves['FireRate4'], waves['Health5'], waves['ShotSpeed5'], waves['FireRate5']),
 fit_a,fit_b,fit_c,fit_d, fit_e, fit_f, fit_g))
 error = np.absolute(waves['Hits']-predict)
-plt.fill_between(waves['WAVE_ID'],0.5,-0.5)
+#plt.fill_between(waves['WAVE_ID'],0.5,-0.5)
 plt.scatter(waves['WAVE_ID'],waves['Hits'],color='red')
 plt.scatter(waves['WAVE_ID'],predict,color='green')
-plt.scatter(waves['WAVE_ID'],error,color='blue')
-plt.annotate("average error: " + '%.3f'%(sum(error)/len(error)),(-5,39))
-plt.annotate("correct: " + str(len([e for e in error if e<0.5])),(-5,38))
-plt.annotate("incorrect: "+str(len([e for e in error if e>=0.5])),(-5,37))
-plt.annotate("accuracy: "+'%.3f'%(len([e for e in error if e<0.5])/len(error)),(-5,36))
+#plt.scatter(waves['WAVE_ID'],error,color='blue')
+plt.annotate("average error: " + '%.3f'%(sum(error)/len(error)),(-5,34))
+plt.annotate("correct: " + str(len([e for e in error if e<0.5])),(-5,33))
+plt.annotate("incorrect: "+str(len([e for e in error if e>=0.5])),(-5,32))
+plt.annotate("accuracy: "+'%.3f'%(len([e for e in error if e<0.5])/len(error)),(-5,31))
 
 subModel = [he_a,he_b,ss_a,ss_b,fr_a,fr_b,fr_c] 
 print(['%.3f'%e for e in subModel])

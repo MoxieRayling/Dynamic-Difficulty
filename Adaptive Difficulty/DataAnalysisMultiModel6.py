@@ -38,9 +38,9 @@ init_guess = [1,1]
 fit = curve_fit(linModel, ss['SSBounds'], ss['hits'], p0=init_guess, absolute_sigma=True)
 ans,cov = fit
 ss_a, ss_b = ans
-x = np.linspace(0,51)
-plt.scatter(ss['SSBounds'], ss['hits'], color = 'red')
-plt.plot(x, linModel(x,ss_a,ss_b), color = 'green')
+#x = np.linspace(0,51)
+#plt.scatter(ss['SSBounds'], ss['hits'], color = 'red')
+#plt.plot(x, linModel(x,ss_a,ss_b), color = 'green')
 
 init_guess = [1,1,1]  
 
@@ -74,14 +74,14 @@ predict = np.around(model1((waves['Health1'],waves['ShotSpeed1'],waves['FireRate
 waves['Health4'], waves['ShotSpeed4'], waves['FireRate4'], waves['Health5'], waves['ShotSpeed5'], waves['FireRate5'], waves['Health6'], waves['ShotSpeed6'], waves['FireRate6']),
 fit_a,fit_b,fit_c,fit_d, fit_e, fit_f, fit_g,fit_h))
 error = np.absolute(waves['Hits']-predict)
-plt.fill_between(waves['WAVE_ID'],0.5,-0.5)
+#plt.fill_between(waves['WAVE_ID'],0.5,-0.5)
 plt.scatter(waves['WAVE_ID'],waves['Hits'],color='red')
 plt.scatter(waves['WAVE_ID'],predict,color='green')
 #plt.scatter(waves['WAVE_ID'],error,color='blue')
-plt.annotate("average error: " + '%.3f'%(sum(error)/len(error)),(-5,49))
-plt.annotate("correct: " + str(len([e for e in error if e<0.5])),(-5,48))
-plt.annotate("incorrect: "+str(len([e for e in error if e>=0.5])),(-5,47))
-plt.annotate("accuracy: "+'%.3f'%(len([e for e in error if e<0.5])/len(error)),(-5,46))
+plt.annotate("average error: " + '%.3f'%(sum(error)/len(error)),(-5,40))
+plt.annotate("correct: " + str(len([e for e in error if e<0.5])),(-5,39))
+plt.annotate("incorrect: "+str(len([e for e in error if e>=0.5])),(-5,38))
+plt.annotate("accuracy: "+'%.3f'%(len([e for e in error if e<0.5])/len(error)),(-5,37))
 subModel = [he_a,he_b,he_c,ss_a,ss_b,fr_a,fr_b,fr_c] 
 print(['%.3f'%e for e in subModel])
 print(['%.3f'%e for e in ans])

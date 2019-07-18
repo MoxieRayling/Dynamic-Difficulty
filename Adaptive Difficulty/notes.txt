@@ -142,7 +142,7 @@ test 71 " shotSpeed 0.01-0.51, fireRate 120-5, health 1-30
 test 72 " 2000 waves
 test 78 " equal enemies
 test 79 shotSpeed isolation
-
+test 85 11,000+
 
 
 

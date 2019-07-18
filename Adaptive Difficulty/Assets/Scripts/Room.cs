@@ -101,8 +101,9 @@ public class Room : MonoBehaviour
         shots.Clear();
         Enemies.ForEach(enemy => enemy.Revive());
         //Debug.Log("Best: " + ga.Best.FitScore + ", " + ga.Best.ToString());
-        //ef.GetBestWave(enemies,ga.Best.GetGenes());
-        ef.GetRandWave(enemies);
+        ef.GetBestWave(enemies,ga.Best.GetGenes());
+        ga.Restart = true;
+        //ef.GetRandWave(enemies);
         wave++;
 
         //Debug.Log("Hits: "+ hits + Environment.NewLine +"Wave: " + wave);

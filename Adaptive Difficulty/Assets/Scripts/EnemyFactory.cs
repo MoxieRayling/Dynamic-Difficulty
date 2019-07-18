@@ -72,5 +72,6 @@ public class EnemyFactory
             enemies[i].ShotSpeed = ((EnemyGene)best[i]).GetShotSpeed();
             enemies[i].FireRate = ((EnemyGene)best[i]).GetFireRate();
         }
+
     }
 }
