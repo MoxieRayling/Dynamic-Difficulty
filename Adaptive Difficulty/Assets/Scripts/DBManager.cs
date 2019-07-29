@@ -13,7 +13,7 @@ public class DBManager
 
     public DBManager()
     {
-        connection = "URI=file:" +  "C:/UserS/Simurgh/Documents/GitHub/Dynamic-Difficulty/Adaptive Difficulty/" + "My_Database.db";
+        connection = "URI=file:" +  "C:/UserS/Simurgh/Documents/GitHub/Dynamic-Difficulty/Adaptive Difficulty/" + "GA_Database.db";
         dbcon = new SqliteConnection(connection);
         dbcon.Open();
         CreateTests();
@@ -21,6 +21,7 @@ public class DBManager
         CreatePlayers();
         CreateEnemies();
         CreateHits();
+        CreateCandidates();
     }
 
     private void CreateTests()
@@ -102,12 +103,44 @@ public class DBManager
         IDataReader reader;
 
         dbcmd.CommandText =
-          "CREATE TABLE IF NOT EXISTS HITS("+
+          "CREATE TABLE IF NOT EXISTS HITS(" +
           "ENEMY_ID INT NOT NULL, " +
           "WAVE_ID INT NOT NULL, " +
           "TEST_ID INT NOT NULL, " +
           "SHOTS_ON_SCREEN INT NOT NULL" +
           ")";
+        reader = dbcmd.ExecuteReader();
+    }
+
+    private void CreateCandidates()
+    {
+        IDbCommand dbcmd = dbcon.CreateCommand();
+        IDataReader reader;
+
+        dbcmd.CommandText =
+          "CREATE TABLE IF NOT EXISTS CANDIDATES(" +
+          "WAVE_ID INT NOT NULL, " +
+          "TEST_ID INT NOT NULL, " +
+          "PREDICTION REAL NOT NULL, " +
+          "VARIANCE REAL NOT NULL, " +
+          "HITS INT NOT NULL, " +
+          "AVERAGE REAL NOT NULL, " +
+          "TARGET REAL NOT NULL, " +
+          "FITNESS REAL NOT NULL, " +
+          "PRIMARY KEY (WAVE_ID, TEST_ID) " +
+          ")";
+        reader = dbcmd.ExecuteReader();
+    }
+
+    public void InsertCandidate(WaveCandidate wc, int wave, int test)
+    {
+        IDbCommand dbcmd = dbcon.CreateCommand();
+        IDataReader reader;
+        dbcmd.CommandText =
+          " INSERT INTO CANDIDATES (WAVE_ID, TEST_ID, PREDICTION, VARIANCE, HITS, AVERAGE, TARGET, FITNESS)" +
+          " VALUES (" + wave + ", " + test + ", " + wc.Prediction + ", " + wc.Variance + ", " + wc.Hits + ", " + wc.Average + ", " + wc.Target + ", " + wc.FitScore + " );";
+        Debug.Log(" INSERT INTO CANDIDATES (WAVE_ID, TEST_ID, PREDICTION, VARIANCE, HITS, AVERAGE, TARGET, FITNESS)" +
+          " VALUES (" + wave + ", " + test + ", " + wc.Prediction + ", " + wc.Variance + ", " + wc.Hits + ", " + wc.Average + ", " + wc.Target + ", " + wc.FitScore + " );");
         reader = dbcmd.ExecuteReader();
     }
 

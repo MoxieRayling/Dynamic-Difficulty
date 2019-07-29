@@ -8,6 +8,11 @@ ss = pd.read_csv("C:/Users/Simurgh/Documents/GitHub/Dynamic-Difficulty/Adaptive 
 fr = pd.read_csv("C:/Users/Simurgh/Documents/GitHub/Dynamic-Difficulty/Adaptive Difficulty/16x model/firerate 6.csv")
 waves = pd.read_csv("C:/Users/Simurgh/Documents/GitHub/Dynamic-Difficulty/Adaptive Difficulty/16x model/waves 6.csv")
 
+test = pd.DataFrame()
+train = pd.DataFrame()
+if waves.shape[0] > 500:
+    test = waves[:500]
+    train = waves[500:]
 
 def linModel(x,a,b):
     return a*x + b
@@ -63,17 +68,19 @@ def model1(X, a,b,c,d,e,f,g,h):
 
 init_guess = [1,1,1,1,1,1,1,1]  
 fit = curve_fit(model1, 
-(waves['Health1'], waves['ShotSpeed1'], waves['FireRate1'],waves['Health2'], waves['ShotSpeed2'], waves['FireRate2'],waves['Health3'], waves['ShotSpeed3'], waves['FireRate3'],
-waves['Health4'], waves['ShotSpeed4'], waves['FireRate4'], waves['Health5'], waves['ShotSpeed5'], waves['FireRate5'], waves['Health6'], waves['ShotSpeed6'], waves['FireRate6']), 
-waves['Hits'], 
+(train['Health1'], train['ShotSpeed1'], train['FireRate1'],train['Health2'], train['ShotSpeed2'], train['FireRate2'],train['Health3'], train['ShotSpeed3'], train['FireRate3'],
+train['Health4'], train['ShotSpeed4'], train['FireRate4'], train['Health5'], train['ShotSpeed5'], train['FireRate5'], train['Health6'], train['ShotSpeed6'], train['FireRate6']), 
+train['Hits'], 
 p0=init_guess, 
 absolute_sigma=True)
 ans,cov = fit
 fit_a, fit_b, fit_c, fit_d, fit_e, fit_f, fit_g, fit_h= ans
-predict = np.around(model1((waves['Health1'],waves['ShotSpeed1'],waves['FireRate1'],waves['Health2'], waves['ShotSpeed2'], waves['FireRate2'],waves['Health3'], waves['ShotSpeed3'], waves['FireRate3'],
-waves['Health4'], waves['ShotSpeed4'], waves['FireRate4'], waves['Health5'], waves['ShotSpeed5'], waves['FireRate5'], waves['Health6'], waves['ShotSpeed6'], waves['FireRate6']),
+predict = np.around(model1((test['Health1'],test['ShotSpeed1'],test['FireRate1'],test['Health2'], test['ShotSpeed2'], test['FireRate2'],test['Health3'], test['ShotSpeed3'], test['FireRate3'],
+test['Health4'], test['ShotSpeed4'], test['FireRate4'], test['Health5'], test['ShotSpeed5'], test['FireRate5'], test['Health6'], test['ShotSpeed6'], test['FireRate6']),
 fit_a,fit_b,fit_c,fit_d, fit_e, fit_f, fit_g,fit_h))
-error = np.absolute(waves['Hits']-predict)
+error = test['Hits']-predict
+absError = np.absolute(test['Hits']-predict)
+'''
 #plt.fill_between(waves['WAVE_ID'],0.5,-0.5)
 plt.scatter(waves['WAVE_ID'],waves['Hits'],color='red')
 plt.scatter(waves['WAVE_ID'],predict,color='green')
@@ -85,5 +92,19 @@ plt.annotate("accuracy: "+'%.3f'%(len([e for e in error if e<0.5])/len(error)),(
 subModel = [he_a,he_b,he_c,ss_a,ss_b,fr_a,fr_b,fr_c] 
 print(['%.3f'%e for e in subModel])
 print(['%.3f'%e for e in ans])
-
+'''
+error = test['Hits']-predict
+absError = np.absolute(test['Hits']-predict)
+random_dists = ['Prediction', 'Actual', 'Error', 'Absolute Error']
+fig, ax = plt.subplots()
+ax.set_xticklabels(random_dists, rotation=45, fontsize=8)
+ax.boxplot([predict,test['Hits'],error,absError])
+ax.yaxis.grid(True)
+ax.annotate("average error: " + '%.3f'%(sum(error)/len(error)),(0.5,48))
+ax.annotate("average absolute error: " + '%.3f'%(sum(absError)/len(absError)),(0.5,45))
+ax.annotate("correct: " + str(len([e for e in absError if e<0.5])),(0.5,42))
+ax.annotate("incorrect: "+str(len([e for e in absError if e>=0.5])),(0.5,39))
+ax.annotate("accuracy: "+'%.3f'%(len([e for e in absError if e<0.5])/len(absError)),(0.5,36))
+ax.set_ylabel("Hits")
+ax.set_title("6 Enemy Wave")
 plt.show()

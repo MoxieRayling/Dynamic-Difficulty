@@ -64,6 +64,11 @@ public class Room : MonoBehaviour
         player.SetDirection(graph.GetDirection());
     }
 
+    public void InsertCandidate(WaveCandidate best)
+    {
+        dbm.InsertCandidate(best, wave-1, test);
+    }
+
     public void HitPlayer(Shot s)
     {
         if (player.Invincible) {
@@ -101,8 +106,8 @@ public class Room : MonoBehaviour
         shots.Clear();
         Enemies.ForEach(enemy => enemy.Revive());
         Debug.Log("Best: " + ga.Best.FitScore + ", " + ga.Best.ToString());
-
         ef.GetBestWave(enemies,ga.Best.GetGenes());
+        ga.Hits = hits;
         ga.Restart = true;
         //ef.GetRandWave(enemies);
         wave++;

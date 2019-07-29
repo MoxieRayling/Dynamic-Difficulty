@@ -57,7 +57,7 @@ public class EnemyFactory
         if (count > 147) count = 1;
     }
 
-    public void GetBestWave(List<Shooter> enemies, List<Gene> best)
+    public void GetBestWave(List<Shooter> enemies, List<EnemyGene> best)
     {
         for(int i = 0; i < 6; i++)
         {
@@ -71,9 +71,9 @@ public class EnemyFactory
                 enemies[i].SetInactive();
                 enemies[i].Id = 0;
             }
-            enemies[i].Health = ((EnemyGene)best[i]).GetHealth();
-            enemies[i].ShotSpeed = (float)((EnemyGene)best[i]).GetShotSpeed()/100;
-            enemies[i].FireRate = ((EnemyGene)best[i]).GetFireRate();
+            enemies[i].Health = best[i].GetHealth();
+            enemies[i].ShotSpeed = (float)best[i].GetShotSpeed()/100;
+            enemies[i].FireRate = best[i].GetFireRate();
         }
 
     }

@@ -47,7 +47,7 @@ fr_a, fr_b, fr_c = ans
 x = np.linspace(5,120)
 plt.scatter(fr['FIRE_RATE'], fr['hits'], color = 'red')
 plt.plot(x, rexpModel(x,fr_a,fr_b,fr_c), color = 'green')
-'''
+
 def model1(X, a,b,c,d,e):
     he,ss,fr = X
     return (linModel(he,he_a,he_b) * b*logModel(ss*100,ss_a,ss_b,ss_c) * c*rexpModel(fr,fr_a,fr_b,fr_c))*d + e
@@ -61,7 +61,8 @@ absolute_sigma=True)
 ans,cov = fit
 fit_a, fit_b, fit_c, fit_d, fit_e = ans
 print(ans)
-predict = np.around(model1((waves['Health1'],waves['ShotSpeed1'],waves['FireRate1']),fit_a,fit_b,fit_c,fit_d,fit_e))
+predict = model1((waves['Health1'],waves['ShotSpeed1'],waves['FireRate1']),fit_a,fit_b,fit_c,fit_d,fit_e)
+'''
 error = np.absolute(waves['Hits']-predict)
 #plt.fill_between(waves['WAVE_ID'],0.5,-0.5)
 plt.scatter(waves['WAVE_ID'],waves['Hits'],color='red')
@@ -76,4 +77,20 @@ subModel = [he_a,he_b,ss_a,ss_b,ss_c,fr_a,fr_b,fr_c]
 print(['%.3f'%e for e in subModel])
 print(['%.3f'%e for e in ans])
 '''
+
+error = waves['Hits']-predict
+absError = np.absolute(waves['Hits']-predict)
+random_dists = ['Prediction', 'Actual', 'Error', 'Absolute Error']
+fig, ax = plt.subplots()
+ax.set_xticklabels(random_dists, rotation=45, fontsize=8)
+ax.boxplot([predict,waves['Hits'],error,absError])
+ax.yaxis.grid(True)
+ax.annotate("average error: " + '%.3f'%(sum(error)/len(error)),(0.5,9.5))
+ax.annotate("average absolute error: " + '%.3f'%(sum(absError)/len(absError)),(0.5,9))
+ax.annotate("correct: " + str(len([e for e in absError if e<0.5])),(0.5,8.5))
+ax.annotate("incorrect: "+str(len([e for e in absError if e>=0.5])),(0.5,8))
+ax.annotate("accuracy: "+'%.3f'%(len([e for e in absError if e<0.5])/len(absError)),(0.5,7.5))
+ax.set_ylabel("Hits")
+ax.set_title("1 Enemy Wave")
+
 plt.show()

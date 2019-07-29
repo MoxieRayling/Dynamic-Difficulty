@@ -629,6 +629,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93d38a4dac2333645a9a4fa1ed0ade6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  room: {fileID: 220368845}
   population: 50
 --- !u!4 &1151281241
 Transform:

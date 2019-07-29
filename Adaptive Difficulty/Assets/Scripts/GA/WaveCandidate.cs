@@ -23,7 +23,17 @@ public class WaveCandidate : Candidate
     private double[] subFit6 = { 0.896, 0.958, 0.720, 0.040, 2.001, 0.010, 6.870, -0.755 };
     private double[] fit6 = { 0.867, 0.843, 0.753, 0.732, 0.634, 0.532, 0.276, -6.928 };
 
+    private double prediction=0;
+    private double variance=0;
+    private int hits= 0;
+    private double average = 0;
+    private double target = 5;
     public double FitScore { get => fitness; set => fitness = value; }
+    public int Hits { get => hits; set => hits = value; }
+    public double Prediction { get => prediction; set => prediction = value; }
+    public double Variance { get => variance; set => variance = value; }
+    public double Average { get => average; set => average = value; }
+    public double Target { get => target; set => target = value; }
 
     public WaveCandidate()
     {
@@ -38,23 +48,26 @@ public class WaveCandidate : Candidate
         this.genes = genes;
     }
 
-    public override List<Candidate> Crossover(List<Gene> candidate)
+    new public List<EnemyGene> GetGenes()
+    {
+        var result = new List<EnemyGene>();
+        foreach(EnemyGene eg in genes)
+        {
+            result.Add(eg);
+        }
+        return result;
+    }
+
+    public List<Candidate> Crossover(List<EnemyGene> candidate)
     {
         List<Candidate> result = new List<Candidate>();
         List<Gene> genes1 = new List<Gene>();
         List<Gene> genes2 = new List<Gene>();
         for (int i = 0; i < 6; i++)
         {
-            if (Random.value < 0.5)
-            {
-                genes1.Add(genes[i]);
-                genes2.Add(candidate[i]);
-            }
-            else
-            {
-                genes2.Add(genes[i]);
-                genes1.Add(candidate[i]);
-            }
+            var newGenes = ((EnemyGene)genes[i]).Crossover(candidate[i]);
+            genes1.Add(newGenes[0]);
+            genes2.Add(newGenes[1]);
         }
 
         result.Add(new WaveCandidate(genes1));
@@ -63,38 +76,48 @@ public class WaveCandidate : Candidate
         return result;
     }
 
-    public override void Fitness()
+    public void Fitness(List<WaveCandidate> history)
     {
-        double target = 1;
         double result = 0;
         switch (genes.FindAll(g => ((EnemyGene)g).IsActive()).Count)
         {
             case 1:
-                result = Model1();
+                Prediction = Model1();
                 break;
             case 2:
-                result = Model2();
+                Prediction = Model2();
                 break;
             case 3:
-                result = Model3();
+                Prediction = Model3();
                 break;
             case 4:
-                result = Model4();
+                Prediction = Model4();
                 break;
             case 5:
-                result = Model5();
+                Prediction = Model5();
                 break;
             case 6:
-                result = Model6();
+                Prediction = Model6();
                 break;
             default:
                 break;
         }
-        if(result == target) FitScore = 1;
-        
-        else result = 1/Mathf.Abs(1 - (float) result);
-        //result *= CompareWaves(new List<WaveData>());
-        
+        if ( history.Count >= 6)
+        {
+            double totalHist = history.GetRange(history.Count-6,5).Sum(e => e.hits);
+            average = totalHist / 5;
+            double newTarget = target * target / average;
+
+            double d = Mathf.Abs((float)(newTarget - Prediction));
+            result = 1 / (d + 1);
+        }
+        else
+        {
+            double d = Mathf.Abs((float)(target - Prediction));
+            result = 1 / (d + 1);
+        }
+        //Variance= CompareWaves(history);
+
         FitScore = result;
     }
 
@@ -109,21 +132,21 @@ public class WaveCandidate : Candidate
         }
     }
 
-    private double CompareWaves(List<WaveData> waves) {
+    private double CompareWaves(List<WaveCandidate> waves) {
         double result = 0;
 
         if (waves.Count > 0) {
 
-            foreach (WaveData wd in waves) {
+            foreach (WaveCandidate wave in waves) {
 
-                var enemies = wd.Enemies.FindAll(e => e.Active);
+                var enemies = wave.GetGenes().FindAll(e => e.Active);
                 double wc = 0;
-                foreach (EnemyData ed in enemies) {
+                foreach (EnemyGene eg1 in enemies) {
 
                     double ec = 0;
-                    foreach (EnemyGene eg in genes) {
+                    foreach (EnemyGene eg2 in genes) {
 
-                        ec += Compare(ed, eg) / genes.Count;
+                        ec += Compare(eg1, eg2) / genes.Count;
                     }
                     wc += ec;
                 }
@@ -133,12 +156,12 @@ public class WaveCandidate : Candidate
         return result / waves.Count;
     }
 
-    private double Compare(EnemyData enemy, EnemyGene gene)
+    private double Compare(EnemyGene enemy, EnemyGene gene)
     {
         return (
-            Mathf.Abs(enemy.Health - gene.GetHealth()) / 29 +
-            Mathf.Abs(enemy.ShotSpeed - gene.GetShotSpeed()) / 50 +
-            Mathf.Abs(enemy.FireRate - gene.GetFireRate()) / 115
+            Mathf.Abs(enemy.GetHealth() - gene.GetHealth()) / 29 +
+            Mathf.Abs(enemy.GetShotSpeed() - gene.GetShotSpeed()) / 50 +
+            Mathf.Abs(enemy.GetFireRate() - gene.GetFireRate()) / 115
             ) / 3;
     }
 
@@ -273,5 +296,15 @@ public class WaveCandidate : Candidate
             }
         }
         return result;
+    }
+
+    public override void Fitness()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override List<Candidate> Crossover(List<Gene> candidate)
+    {
+        throw new System.NotImplementedException();
     }
 }

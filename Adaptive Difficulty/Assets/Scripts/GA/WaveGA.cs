@@ -5,17 +5,22 @@ using UnityEngine;
 
 public class WaveGA : MonoBehaviour
 {
+    public Room room;
     private List<WaveCandidate> cands;
+    private List<WaveCandidate> history;
     private int gen = 0;
     public int population;
     private WaveCandidate best;
     private bool restart = false;
+    private int hits;
     public WaveCandidate Best { get => best; set => best = value; }
     public bool Restart { get => restart; set => restart = value; }
+    public int Hits { get => hits; set => hits = value; }
 
     private void Start()
     {
         cands = new List<WaveCandidate>();
+        history = new List<WaveCandidate>();
         for (int i = 0; i<population-1; i++)
         {
             cands.Add(new WaveCandidate());
@@ -47,7 +52,7 @@ public class WaveGA : MonoBehaviour
         foreach(WaveCandidate wc in cands)
         {
             wc.Mutate(0.166);
-            wc.Fitness();
+            wc.Fitness(history);
             //Debug.Log(wc.ToString());
         }
         cands.OrderBy(c => c.FitScore);
@@ -56,6 +61,11 @@ public class WaveGA : MonoBehaviour
     }
     public void NewGA()
     {
+        history.Add(Best);
+        if (history.Count >= 2) { 
+            history[history.Count-2].Hits = Hits;
+            room.InsertCandidate(history[history.Count - 2]);
+        }
         cands = new List<WaveCandidate>();
         for (int i = 0; i < population - 1; i++)
         {
