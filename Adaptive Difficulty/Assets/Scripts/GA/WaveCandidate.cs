@@ -102,23 +102,25 @@ public class WaveCandidate : Candidate
             default:
                 break;
         }
-        if ( history.Count >= 6)
+        int n = 5;
+        if ( history.Count >= n+1)
         {
-            double totalHist = history.GetRange(history.Count-6,5).Sum(e => e.hits);
-            average = totalHist / 5;
+            double totalHist = history.GetRange(history.Count-(n+1),n).Sum(e => e.hits);
+            average = totalHist / n;
             double newTarget = target * target / average;
 
             double d = Mathf.Abs((float)(newTarget - Prediction));
             result = 1 / (d + 1);
+            Variance= CompareWaves(history.GetRange(history.Count - (n + 1), n));
         }
         else
         {
             double d = Mathf.Abs((float)(target - Prediction));
             result = 1 / (d + 1);
+            Variance= CompareWaves(history);
         }
-        //Variance= CompareWaves(history);
-
-        FitScore = result;
+        //Debug.Log(Variance);
+        FitScore = result*0.5 + Variance*0.5;
     }
 
     public override void Mutate(double chance)
@@ -150,7 +152,7 @@ public class WaveCandidate : Candidate
                     }
                     wc += ec;
                 }
-                result += wc * (Mathf.Abs(genes.Count - enemies.Count) + 1) / 6;
+                result += wc * (Mathf.Abs((float)(genes.Count - enemies.Count)) + 1) / 6;
             }
         }
         return result / waves.Count;
@@ -158,11 +160,12 @@ public class WaveCandidate : Candidate
 
     private double Compare(EnemyGene enemy, EnemyGene gene)
     {
-        return (
-            Mathf.Abs(enemy.GetHealth() - gene.GetHealth()) / 29 +
-            Mathf.Abs(enemy.GetShotSpeed() - gene.GetShotSpeed()) / 50 +
-            Mathf.Abs(enemy.GetFireRate() - gene.GetFireRate()) / 115
+        double result =  (
+            Mathf.Abs((float)(enemy.GetHealth() - gene.GetHealth())) / 29 +
+            Mathf.Abs((float)(enemy.GetShotSpeed() - gene.GetShotSpeed())) / 50 +
+            Mathf.Abs((float)(enemy.GetFireRate() - gene.GetFireRate())) / 115
             ) / 3;
+        return result;
     }
 
     private double LinModel(int x, double a, double b)

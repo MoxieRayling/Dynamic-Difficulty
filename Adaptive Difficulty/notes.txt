@@ -144,6 +144,15 @@ test 78 " equal enemies
 test 79 shotSpeed isolation
 test 85 11,000+
 
+spawn wave
+score wave
+calculate target
 
+test 26 static target
+test 27 average target
+test 28 5-average target
+test 40 variance
+test 41 variance 0.1 fitness
+test 44 variance 0.5 fitness
 
 
