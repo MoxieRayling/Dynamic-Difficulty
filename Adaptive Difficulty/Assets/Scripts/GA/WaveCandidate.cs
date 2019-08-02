@@ -101,7 +101,7 @@ public class WaveCandidate : Candidate
                 break;
             default:
                 break;
-        }
+        }/*
         int n = 5;
         if ( history.Count >= n+1)
         {
@@ -114,13 +114,13 @@ public class WaveCandidate : Candidate
             Variance= CompareWaves(history.GetRange(history.Count - (n + 1), n));
         }
         else
-        {
+        {*/
             double d = Mathf.Abs((float)(target - Prediction));
             result = 1 / (d + 1);
             Variance= CompareWaves(history);
-        }
+        //}
         //Debug.Log(Variance);
-        FitScore = result*0.5 + Variance*0.5;
+        FitScore = result;
     }
 
     public override void Mutate(double chance)

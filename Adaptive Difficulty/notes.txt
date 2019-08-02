@@ -154,5 +154,7 @@ test 28 5-average target
 test 40 variance
 test 41 variance 0.1 fitness
 test 44 variance 0.5 fitness
+test 45 big test 5 average
+test 46 big test static target
 
 
