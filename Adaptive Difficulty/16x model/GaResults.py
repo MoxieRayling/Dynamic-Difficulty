@@ -10,6 +10,8 @@ pred3 = pd.read_csv("C:/Users/Simurgh/Documents/GitHub/Dynamic-Difficulty/Adapti
 pred4 = pd.read_csv("C:/Users/Simurgh/Documents/GitHub/Dynamic-Difficulty/Adaptive Difficulty/16x model/ga variance.csv")
 pred5 = pd.read_csv("C:/Users/Simurgh/Documents/GitHub/Dynamic-Difficulty/Adaptive Difficulty/16x model/ga variance fitness.csv")
 pred6 = pd.read_csv("C:/Users/Simurgh/Documents/GitHub/Dynamic-Difficulty/Adaptive Difficulty/16x model/ga variance fitness 50 50.csv")
+pred7 = pd.read_csv("C:/Users/Simurgh/Documents/GitHub/Dynamic-Difficulty/Adaptive Difficulty/16x model/ga static target 1000.csv")
+pred8 = pd.read_csv("C:/Users/Simurgh/Documents/GitHub/Dynamic-Difficulty/Adaptive Difficulty/16x model/ga 5 point average 1000.csv")
 
 '''
 plt.plot(random['HITS'][:100],label = 'Hits')
@@ -46,7 +48,7 @@ plt.ylabel('Hits')
 plt.title("GA Prediction: Run-Length Average")
 plt.annotate("average error: " + '%.3f'%(np.average(pred2['HITS'][:100]-5)),(50,19))
 '''
-
+'''
 plt.plot(pred3['HITS'][:100],label = 'Hits')
 plt.plot(np.convolve(pred3['HITS'][:100],np.ones((10,))/10),label='Moving Average')
 plt.plot(pred3['PREDICTION'][:100],label='Prediction')
@@ -57,7 +59,7 @@ plt.xlabel('Waves')
 plt.ylabel('Hits')
 plt.title("GA Prediction: 5 Point Average")
 plt.annotate("average error: " + '%.3f'%(np.average(pred3['HITS'][:100]-5)),(50,19))
-
+'''
 '''
 plt.plot(pred4['HITS'][:100],label = 'Hits')
 plt.plot(np.convolve(pred4['HITS'][:100],np.ones((10,))/10),label='Moving Average')
@@ -98,5 +100,19 @@ plt.ylabel('Hits')
 plt.title("GA Prediction: Variance")
 plt.annotate("average variance: " + '%.3f'%(np.average(pred6['VARIANCE'][:100])),(50,18))
 plt.annotate("average error: " + '%.3f'%(np.average(pred6['HITS'][:100]-5)),(50,19))
+'''
+
+titles = ['Hits', 'Prediction', 'Variance', 'Fitness']
+fig, ax = plt.subplots()
+ax.set_xticklabels(titles)
+ax.boxplot([pred7['HITS'][:1000],pred7['PREDICTION'][:1000],pred7['VARIANCE'][:1000]*10,pred7['FITNESS'][:1000]*10])
+ax.yaxis.grid(True)
+
+'''
+titles = ['Hits', 'Prediction', 'Variance', 'Fitness']
+fig, ax = plt.subplots()
+ax.set_xticklabels(titles)
+ax.boxplot([pred8['HITS'][:1000],pred8['PREDICTION'][:1000],pred8['VARIANCE'][:1000]*10,pred8['FITNESS'][:1000]*10])
+ax.yaxis.grid(True)
 '''
 plt.show()

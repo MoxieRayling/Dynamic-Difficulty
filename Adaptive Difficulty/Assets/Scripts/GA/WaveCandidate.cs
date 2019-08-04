@@ -27,7 +27,7 @@ public class WaveCandidate : Candidate
     private double variance=0;
     private int hits= 0;
     private double average = 0;
-    private double target = 5;
+    private double target = 10;
     public double FitScore { get => fitness; set => fitness = value; }
     public int Hits { get => hits; set => hits = value; }
     public double Prediction { get => prediction; set => prediction = value; }
@@ -101,7 +101,7 @@ public class WaveCandidate : Candidate
                 break;
             default:
                 break;
-        }/*
+        }
         int n = 5;
         if ( history.Count >= n+1)
         {
@@ -111,14 +111,13 @@ public class WaveCandidate : Candidate
 
             double d = Mathf.Abs((float)(newTarget - Prediction));
             result = 1 / (d + 1);
-            Variance= CompareWaves(history.GetRange(history.Count - (n + 1), n));
         }
         else
-        {*/
+        {
             double d = Mathf.Abs((float)(target - Prediction));
             result = 1 / (d + 1);
-            Variance= CompareWaves(history);
-        //}
+        }
+        Variance = CompareWaves(history);
         //Debug.Log(Variance);
         FitScore = result;
     }
@@ -132,11 +131,24 @@ public class WaveCandidate : Candidate
                 g.Mutate();
             }
         }
+        if (genes.FindAll(g => ((EnemyGene)g).Active).Count == 0){ 
+            EnemyGene e = null;
+            int i = 50;
+            foreach (EnemyGene eg in genes)
+            {
+                if (eg.GetHealth() <= i)
+                {
+                    i = eg.GetHealth();
+                    e = eg;
+                }
+            }
+            e.Active = true;
+        }
     }
 
     private double CompareWaves(List<WaveCandidate> waves) {
         double result = 0;
-
+        if (waves.Count >= 5) waves = waves.GetRange(0, 5);
         if (waves.Count > 0) {
 
             foreach (WaveCandidate wave in waves) {

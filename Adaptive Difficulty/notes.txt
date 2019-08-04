@@ -156,5 +156,14 @@ test 41 variance 0.1 fitness
 test 44 variance 0.5 fitness
 test 45 big test 5 average
 test 46 big test static target
-
+test 47 big test 0.1 variance
+test 48 big test 0.2 variance
+test 49 big test 0.3 variance
+test 50 big test 0.4 variance
+test 51 big test 0.5 variance
+test 52 big test static target v2	
+test 57 big test target = 0	
+test 59 big test target = 1	
+test 60 big test target = 10
+	
 
