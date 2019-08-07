@@ -165,5 +165,12 @@ test 52 big test static target v2
 test 57 big test target = 0	
 test 59 big test target = 1	
 test 60 big test target = 10
+test 61 big test target = 20
+test 65 targetting v2 target = 20
+test 66 target accuracy test
+test 71 8 hits 2 average
+test 72 8 hits 5 average
+test 73 8 hits 7 average
+test 74 8 hits 10 average
 	
 

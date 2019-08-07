@@ -27,7 +27,7 @@ public class WaveCandidate : Candidate
     private double variance=0;
     private int hits= 0;
     private double average = 0;
-    private double target = 10;
+    private double target = 8;
     public double FitScore { get => fitness; set => fitness = value; }
     public int Hits { get => hits; set => hits = value; }
     public double Prediction { get => prediction; set => prediction = value; }
@@ -102,21 +102,26 @@ public class WaveCandidate : Candidate
             default:
                 break;
         }
-        int n = 5;
+        int n = 10;
+        double fit = 0;
         if ( history.Count >= n+1)
         {
+            //double scale = history.Select(g => g.Prediction / Mathf.Max(g.Hits,1)).Average();
+            //target *= scale;
             double totalHist = history.GetRange(history.Count-(n+1),n).Sum(e => e.hits);
             average = totalHist / n;
-            double newTarget = target * target / average;
+            double newTarget = Mathf.Min((float)( target * target / average),14);
 
-            double d = Mathf.Abs((float)(newTarget - Prediction));
-            result = 1 / (d + 1);
+            fit = Mathf.Abs((float)(newTarget - Prediction));
+            result = 1 / (fit + 1);
         }
         else
         {
-            double d = Mathf.Abs((float)(target - Prediction));
-            result = 1 / (d + 1);
-        }
+            fit = Mathf.Abs((float)(target - Prediction));
+            result = 1 / (fit + 1);
+        }/*
+        double d = Mathf.Abs((float)(target - Prediction));
+        result = 1 / (d + 1);*/
         Variance = CompareWaves(history);
         //Debug.Log(Variance);
         FitScore = result;

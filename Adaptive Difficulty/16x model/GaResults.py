@@ -2,6 +2,7 @@ import numpy as np
 from scipy.optimize import curve_fit
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.ticker as plticker
 
 random = pd.read_csv("C:/Users/Simurgh/Documents/GitHub/Dynamic-Difficulty/Adaptive Difficulty/16x model/test 85.csv")
 pred1 = pd.read_csv("C:/Users/Simurgh/Documents/GitHub/Dynamic-Difficulty/Adaptive Difficulty/16x model/ga prediction.csv")
@@ -12,7 +13,7 @@ pred5 = pd.read_csv("C:/Users/Simurgh/Documents/GitHub/Dynamic-Difficulty/Adapti
 pred6 = pd.read_csv("C:/Users/Simurgh/Documents/GitHub/Dynamic-Difficulty/Adaptive Difficulty/16x model/ga variance fitness 50 50.csv")
 pred7 = pd.read_csv("C:/Users/Simurgh/Documents/GitHub/Dynamic-Difficulty/Adaptive Difficulty/16x model/ga static target 1000.csv")
 pred8 = pd.read_csv("C:/Users/Simurgh/Documents/GitHub/Dynamic-Difficulty/Adaptive Difficulty/16x model/ga 5 point average 1000.csv")
-
+targets = pd.read_csv("C:/Users/Simurgh/Documents/GitHub/Dynamic-Difficulty/Adaptive Difficulty/16x model/target testing.csv")
 '''
 plt.plot(random['HITS'][:100],label = 'Hits')
 plt.plot(np.convolve(random['HITS'][:100],np.ones((10,))/10,mode='full'),label = 'Moving Average')
@@ -101,13 +102,13 @@ plt.title("GA Prediction: Variance")
 plt.annotate("average variance: " + '%.3f'%(np.average(pred6['VARIANCE'][:100])),(50,18))
 plt.annotate("average error: " + '%.3f'%(np.average(pred6['HITS'][:100]-5)),(50,19))
 '''
-
+'''
 titles = ['Hits', 'Prediction', 'Variance', 'Fitness']
 fig, ax = plt.subplots()
 ax.set_xticklabels(titles)
 ax.boxplot([pred7['HITS'][:1000],pred7['PREDICTION'][:1000],pred7['VARIANCE'][:1000]*10,pred7['FITNESS'][:1000]*10])
 ax.yaxis.grid(True)
-
+'''
 '''
 titles = ['Hits', 'Prediction', 'Variance', 'Fitness']
 fig, ax = plt.subplots()
@@ -115,4 +116,53 @@ ax.set_xticklabels(titles)
 ax.boxplot([pred8['HITS'][:1000],pred8['PREDICTION'][:1000],pred8['VARIANCE'][:1000]*10,pred8['FITNESS'][:1000]*10])
 ax.yaxis.grid(True)
 '''
+
+fig, ax = plt.subplots()
+
+plt.fill_between(range(0,38),5,-5,color='#ccffcc')
+plt.fill_between(range(0,38),4,-4,color='#99ff99')
+plt.fill_between(range(0,38),3,-3,color='#66ff66')
+plt.fill_between(range(0,38),2,-2,color='#33ff33')
+plt.fill_between(range(0,38),1,-1,color='#00ff00')
+ax.boxplot([
+targets.query('TARGET == 0')['HITS'][:100]-targets.query('TARGET == 0')['PREDICTION'][:100],
+targets.query('TARGET == 1')['HITS'][:100]-targets.query('TARGET == 1')['PREDICTION'][:100],
+targets.query('TARGET == 2')['HITS'][:100]-targets.query('TARGET == 2')['PREDICTION'][:100],
+targets.query('TARGET == 3')['HITS'][:100]-targets.query('TARGET == 3')['PREDICTION'][:100],
+targets.query('TARGET == 4')['HITS'][:100]-targets.query('TARGET == 4')['PREDICTION'][:100],
+targets.query('TARGET == 5')['HITS'][:100]-targets.query('TARGET == 5')['PREDICTION'][:100],
+targets.query('TARGET == 6')['HITS'][:100]-targets.query('TARGET == 6')['PREDICTION'][:100],
+targets.query('TARGET == 7')['HITS'][:100]-targets.query('TARGET == 7')['PREDICTION'][:100],
+targets.query('TARGET == 8')['HITS'][:100]-targets.query('TARGET == 8')['PREDICTION'][:100],
+targets.query('TARGET == 9')['HITS'][:100]-targets.query('TARGET == 9')['PREDICTION'][:100],
+targets.query('TARGET == 10')['HITS'][:100]-targets.query('TARGET == 10')['PREDICTION'][:100],
+targets.query('TARGET == 11')['HITS'][:100]-targets.query('TARGET == 11')['PREDICTION'][:100],
+targets.query('TARGET == 12')['HITS'][:100]-targets.query('TARGET == 12')['PREDICTION'][:100],
+targets.query('TARGET == 13')['HITS'][:100]-targets.query('TARGET == 13')['PREDICTION'][:100],
+targets.query('TARGET == 14')['HITS'][:100]-targets.query('TARGET == 14')['PREDICTION'][:100],
+targets.query('TARGET == 15')['HITS'][:100]-targets.query('TARGET == 15')['PREDICTION'][:100],
+targets.query('TARGET == 16')['HITS'][:100]-targets.query('TARGET == 16')['PREDICTION'][:100],
+targets.query('TARGET == 17')['HITS'][:100]-targets.query('TARGET == 17')['PREDICTION'][:100],
+targets.query('TARGET == 18')['HITS'][:100]-targets.query('TARGET == 18')['PREDICTION'][:100],
+targets.query('TARGET == 19')['HITS'][:100]-targets.query('TARGET == 19')['PREDICTION'][:100],
+targets.query('TARGET == 20')['HITS'][:100]-targets.query('TARGET == 20')['PREDICTION'][:100],
+targets.query('TARGET == 21')['HITS'][:100]-targets.query('TARGET == 21')['PREDICTION'][:100],
+targets.query('TARGET == 22')['HITS'][:100]-targets.query('TARGET == 22')['PREDICTION'][:100],
+targets.query('TARGET == 23')['HITS'][:100]-targets.query('TARGET == 23')['PREDICTION'][:100],
+targets.query('TARGET == 24')['HITS'][:100]-targets.query('TARGET == 24')['PREDICTION'][:100],
+targets.query('TARGET == 25')['HITS'][:100]-targets.query('TARGET == 25')['PREDICTION'][:100],
+targets.query('TARGET == 26')['HITS'][:100]-targets.query('TARGET == 26')['PREDICTION'][:100],
+targets.query('TARGET == 27')['HITS'][:100]-targets.query('TARGET == 27')['PREDICTION'][:100],
+targets.query('TARGET == 28')['HITS'][:100]-targets.query('TARGET == 28')['PREDICTION'][:100],
+targets.query('TARGET == 29')['HITS'][:100]-targets.query('TARGET == 29')['PREDICTION'][:100],
+targets.query('TARGET == 30')['HITS'][:100]-targets.query('TARGET == 30')['PREDICTION'][:100],
+targets.query('TARGET == 31')['HITS'][:100]-targets.query('TARGET == 31')['PREDICTION'][:100],
+targets.query('TARGET == 32')['HITS'][:100]-targets.query('TARGET == 32')['PREDICTION'][:100],
+targets.query('TARGET == 33')['HITS'][:100]-targets.query('TARGET == 33')['PREDICTION'][:100],
+targets.query('TARGET == 34')['HITS'][:100]-targets.query('TARGET == 34')['PREDICTION'][:100],
+targets.query('TARGET == 35')['HITS'][:100]-targets.query('TARGET == 35')['PREDICTION'][:100]
+])
+ax.yaxis.set_major_locator(plticker.MultipleLocator(base=5))
+ax.grid(which='major',axis = 'y',linestyle='-')
+ax.set_xticklabels(range(0,36))
 plt.show()
