@@ -24,4 +24,12 @@ public class StatGene : Gene
     {
         return value;
     }
+    public void Max()
+    {
+        value = upperBound;
+    }
+    public void Min()
+    {
+        value = lowerBound;
+    }
 }

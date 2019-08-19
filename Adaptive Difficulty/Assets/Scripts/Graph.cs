@@ -23,20 +23,20 @@ public class Graph : MonoBehaviour
     {
         pixels = new List<Pixel>();
         bestDir = new Vector2(1, 0);
-        for(int i = 0; i < 20; i++)
+        for(int i = 0; i < 360; i++)
         {
             Pixel p = Instantiate(pixelPrefab, transform).GetComponent<Pixel>();
-            p.transform.SetPositionAndRotation(Rotate(new Vector2(1, 0),i*18),Quaternion.identity);
+            p.transform.SetPositionAndRotation(Rotate(new Vector2(1, 0),i),Quaternion.identity);
             pixels.Add(p);
         }
     }
     
     void Update()
     {
-        for(int i = 0; i<20; i++)
+        for(int i = 0; i<360; i++)
         {
-            pixels[i].val = (float)Direction(i*18);
-            pixels[i].transform.SetPositionAndRotation(pos + Rotate(new Vector2(1, 0), i*18), Quaternion.identity);
+            pixels[i].val = (float)Direction(i);
+            pixels[i].transform.SetPositionAndRotation(pos + Rotate(new Vector2(1, 0), i), Quaternion.identity);
         }
 
         
@@ -45,7 +45,7 @@ public class Graph : MonoBehaviour
     {
         int max = 0;
         float val = pixels[0].val;
-        for (int i = 1; i < 20; i++)
+        for (int i = 1; i < 360; i++)
         {
             if (pixels[i].val < val)
             {
@@ -55,7 +55,7 @@ public class Graph : MonoBehaviour
         }
         pixels[max].sr.color = new Color(0,1,1);
         //Debug.Log(max + " " + val);
-        bestDir = Rotate(new Vector2(1, 0), max*18);
+        bestDir = Rotate(new Vector2(1, 0), max);
     }
 
     public Vector2 GetDirection()

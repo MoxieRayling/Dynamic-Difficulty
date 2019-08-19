@@ -93,18 +93,19 @@ subModel = [he_a,he_b,he_c,ss_a,ss_b,fr_a,fr_b,fr_c]
 print(['%.3f'%e for e in subModel])
 print(['%.3f'%e for e in ans])
 '''
+meanpointprops = dict(marker='o', markeredgecolor='black', markerfacecolor='red')
 error = test['Hits']-predict
 absError = np.absolute(test['Hits']-predict)
-random_dists = ['Prediction', 'Actual', 'Error', 'Absolute Error']
+random_dists = ['Prediction', 'Hits', 'Error', 'Absolute Error']
 fig, ax = plt.subplots()
 ax.set_xticklabels(random_dists, rotation=45, fontsize=8)
-ax.boxplot([predict,test['Hits'],error,absError])
+ax.boxplot([predict,test['Hits'],error,absError], meanprops=meanpointprops, showmeans=True)
 ax.yaxis.grid(True)
 ax.annotate("average error: " + '%.3f'%(sum(error)/len(error)),(0.5,48))
 ax.annotate("average absolute error: " + '%.3f'%(sum(absError)/len(absError)),(0.5,45))
 ax.annotate("correct: " + str(len([e for e in absError if e<0.5])),(0.5,42))
 ax.annotate("incorrect: "+str(len([e for e in absError if e>=0.5])),(0.5,39))
 ax.annotate("accuracy: "+'%.3f'%(len([e for e in absError if e<0.5])/len(absError)),(0.5,36))
-ax.set_ylabel("Hits")
+ax.set_ylabel("Hits per wave")
 ax.set_title("6 Enemy Wave")
 plt.show()

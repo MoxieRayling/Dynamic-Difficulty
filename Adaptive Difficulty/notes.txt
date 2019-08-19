@@ -172,5 +172,32 @@ test 71 8 hits 2 average
 test 72 8 hits 5 average
 test 73 8 hits 7 average
 test 74 8 hits 10 average
+test 75 8 hits 50 i-frames
+test 76 8 hits 50 i-frames no average
+test 77 8 hits 25 i-frames
+test 78 8 hits 25 i-frames no average
+test 79 8 hits 1 i-frame no average
+test 80 8 hits 1 i-frame
+test 81 8 hits steering = 1
+test 82 8 hits steering = 1 no average
+test 83 8 hits steering = 0.05
+test 84 8 hits steering = 0.05 no average
 	
+test 109 big test static target
+test 110 big test 100% variance
+test 111 big test 50% variance
+test 112 big test 20% variance
+test 113 big test 80% variance
+to do: 
+check variance
+more iframes tests
+worse pathing
+maybe re-calculate model
+
+
+
+
+
+
+
 

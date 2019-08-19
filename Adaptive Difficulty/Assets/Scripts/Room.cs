@@ -48,6 +48,7 @@ public class Room : MonoBehaviour
         Debug.Log("Test " + test);
         dbm.InsertPlayer(player, wave, test);
         dbm.InsertTest(test, "GA Test");
+        Debug.Log("Variance: " + VarianceTest());
     }
 
     void FixedUpdate()
@@ -183,5 +184,66 @@ public class Room : MonoBehaviour
             return alive[0];
         }
         return null;
+    }
+
+    private double VarianceTest()
+    {
+        List<WaveCandidate> waves = new List<WaveCandidate>();
+        List<EnemyGene> genes = new List<EnemyGene>();
+        List<Gene> wcGenes = new List<Gene>();
+        EnemyGene strong = new EnemyGene();
+        strong.Active = true;
+        strong.FireRate.Min();
+        strong.ShotSpeed.Max();
+        strong.Health.Max();
+        EnemyGene weak = new EnemyGene();
+        weak.Active = true;
+        weak.FireRate.Max();
+        weak.ShotSpeed.Min();
+        weak.Health.Min();
+        wcGenes.Add(strong);
+        wcGenes.Add(strong);
+        wcGenes.Add(strong);
+        wcGenes.Add(strong);
+        wcGenes.Add(strong);
+        wcGenes.Add(strong);
+        genes.Add(strong);
+        WaveCandidate cand = new WaveCandidate();
+        cand.SetGenes(wcGenes);
+        waves.Add(cand);
+        double result = 0;
+
+        foreach (WaveCandidate wave in waves)
+        {
+            var enemies = wave.GetGenes().FindAll(e => e.Active);
+            double wc = 0;
+            foreach (EnemyGene eg1 in enemies)
+            {
+
+                double ec = 0;
+                foreach (EnemyGene eg2 in genes)
+                {
+                    ec += Compare(eg1, eg2) / genes.Count;
+                    //Debug.Log("ec " + ec);
+                }
+                wc += ec;
+                //Debug.Log("wc " + wc);
+            }
+            result += wc / (genes.Count * enemies.Count);
+            //Debug.Log("result " + result);
+        }
+
+        return result / waves.Count;
+    }
+
+    private double Compare(EnemyGene enemy, EnemyGene gene)
+    {
+        double result = (
+            Mathf.Abs((float)(enemy.GetHealth() - gene.GetHealth())) / 29 +
+            Mathf.Abs((float)(enemy.GetShotSpeed() - gene.GetShotSpeed())) / 40 +
+            Mathf.Abs((float)(enemy.GetFireRate() - gene.GetFireRate())) / 115
+            ) / 3;
+        //Debug.Log(result + " " + enemy.GetHealth() + " " + gene.GetHealth() + " " + enemy.GetShotSpeed() + " " + gene.GetShotSpeed() + " " + enemy.GetFireRate() + " " + gene.GetFireRate());
+        return result;
     }
 }

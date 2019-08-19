@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -76,6 +77,11 @@ public class WaveCandidate : Candidate
         return result;
     }
 
+    internal void SetGenes(List<Gene> wcGenes)
+    {
+        genes = wcGenes;
+    }
+
     public void Fitness(List<WaveCandidate> history)
     {
         double result = 0;
@@ -102,7 +108,8 @@ public class WaveCandidate : Candidate
             default:
                 break;
         }
-        int n = 10;
+        
+        int n = 5;
         double fit = 0;
         if ( history.Count >= n+1)
         {
@@ -119,19 +126,20 @@ public class WaveCandidate : Candidate
         {
             fit = Mathf.Abs((float)(target - Prediction));
             result = 1 / (fit + 1);
-        }/*
+        }
+        /*
         double d = Mathf.Abs((float)(target - Prediction));
         result = 1 / (d + 1);*/
         Variance = CompareWaves(history);
         //Debug.Log(Variance);
-        FitScore = result;
+        FitScore = result * 0.2 + (0.8 * variance);
     }
 
     public override void Mutate(double chance)
     {
         foreach (Gene g in genes)
         {
-            if (Random.value > chance)
+            if (UnityEngine.Random.value > chance)
             {
                 g.Mutate();
             }
@@ -153,23 +161,27 @@ public class WaveCandidate : Candidate
 
     private double CompareWaves(List<WaveCandidate> waves) {
         double result = 0;
-        if (waves.Count >= 5) waves = waves.GetRange(0, 5);
+        if (waves.Count >= 5) waves = waves.GetRange(waves.Count - 5, 5);
         if (waves.Count > 0) {
 
-            foreach (WaveCandidate wave in waves) {
-
+            foreach (WaveCandidate wave in waves)
+            {
                 var enemies = wave.GetGenes().FindAll(e => e.Active);
                 double wc = 0;
-                foreach (EnemyGene eg1 in enemies) {
+                foreach (EnemyGene eg1 in enemies)
+                {
 
                     double ec = 0;
-                    foreach (EnemyGene eg2 in genes) {
-
+                    foreach (EnemyGene eg2 in genes)
+                    {
                         ec += Compare(eg1, eg2) / genes.Count;
+                        //Debug.Log("ec " + ec);
                     }
                     wc += ec;
+                    //Debug.Log("wc " + wc);
                 }
-                result += wc * (Mathf.Abs((float)(genes.Count - enemies.Count)) + 1) / 6;
+                result += wc / (genes.Count * enemies.Count);
+                //Debug.Log("result " + result);
             }
         }
         return result / waves.Count;
@@ -179,7 +191,7 @@ public class WaveCandidate : Candidate
     {
         double result =  (
             Mathf.Abs((float)(enemy.GetHealth() - gene.GetHealth())) / 29 +
-            Mathf.Abs((float)(enemy.GetShotSpeed() - gene.GetShotSpeed())) / 50 +
+            Mathf.Abs((float)(enemy.GetShotSpeed() - gene.GetShotSpeed())) / 40 +
             Mathf.Abs((float)(enemy.GetFireRate() - gene.GetFireRate())) / 115
             ) / 3;
         return result;
